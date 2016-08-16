@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Yearn</string>
+
+    <string-array name="yearn_types">
+        <item>a beer</item>
+        <item>food</item>
+
+    </string-array>
 </resources>
