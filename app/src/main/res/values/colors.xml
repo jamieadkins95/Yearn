@@ -3,4 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="grey_background">#EAEAEA</color>
+
+    <item name="textPrimary" type="color">#000000</item>
+    <item name="textSecondary" type="color">#B3000000</item>
+    <item name="textHint" type="color">#4D000000</item>
+
+    <item name="textDivider" type="color">#1A000000</item>
 </resources>
