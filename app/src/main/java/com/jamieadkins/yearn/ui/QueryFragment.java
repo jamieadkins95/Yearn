@@ -1,7 +1,7 @@
 package com.jamieadkins.yearn.ui;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -13,9 +13,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jamieadkins.yearn.QueryActivity;
 import com.jamieadkins.yearn.R;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,7 +39,16 @@ public class QueryFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
 
         List<String> yearnTypes = Arrays.asList(getResources().getStringArray(R.array.yearn_types));
-        recyclerView.setAdapter(new YearningRecyclerViewAdapter(yearnTypes));
+
+        // Get all the icons and add them to a List.
+        TypedArray icons = getResources().obtainTypedArray(R.array.yearn_icons);
+        List<Integer> yearnIcons = new ArrayList<>();
+        for (int i = 0; i < icons.length(); i++)
+        {
+            yearnIcons.add(icons.getResourceId(i, -1));
+        }
+
+        recyclerView.setAdapter(new YearningRecyclerViewAdapter(yearnTypes, yearnIcons));
     }
 
     @Override
@@ -50,7 +59,8 @@ public class QueryFragment extends Fragment {
     public static class YearningRecyclerViewAdapter
             extends RecyclerView.Adapter<YearningRecyclerViewAdapter.ViewHolder> {
 
-        private List<String> mValues;
+        private List<String> mYearns;
+        private List<Integer> mIcons;
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
             public String mBoundString;
@@ -73,11 +83,12 @@ public class QueryFragment extends Fragment {
         }
 
         public String getValueAt(int position) {
-            return mValues.get(position);
+            return mYearns.get(position);
         }
 
-        public YearningRecyclerViewAdapter(List<String> items) {
-            mValues = items;
+        public YearningRecyclerViewAdapter(List<String> items, List<Integer> icons) {
+            mYearns = items;
+            mIcons = icons;
         }
 
         @Override
@@ -89,11 +100,11 @@ public class QueryFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mBoundString = mValues.get(position);
-            holder.mTextView.setText(mValues.get(position));
+            holder.mBoundString = mYearns.get(position);
+            holder.mTextView.setText(mYearns.get(position));
             holder.mImageView.setImageDrawable(
                     ContextCompat.getDrawable(
-                            holder.mImageView.getContext(), R.drawable.ic_local_bar));
+                            holder.mImageView.getContext(), mIcons.get(position)));
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -109,7 +120,7 @@ public class QueryFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return mValues.size();
+            return mYearns.size();
         }
     }
 }

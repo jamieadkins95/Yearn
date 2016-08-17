@@ -2,10 +2,27 @@
     <string name="app_name">Yearn</string>
 
     <string-array name="yearn_types">
-        <item>a beer</item>
-        <item>food</item>
-
+        <item>@string/yearn_drink</item>
+        <item>@string/yearn_coffee</item>
+        <item>@string/yearn_food</item>
+        <item>@string/yearn_activity</item>
+        <item>@string/yearn_atm</item>
     </string-array>
 
+    <!--Doesn't technically belong here but I want to keep the 2 arrays together-->
+    <array name="yearn_icons">
+        <item>@drawable/ic_local_bar</item>
+        <item>@drawable/ic_local_cafe</item>
+        <item>@drawable/ic_local_dining</item>
+        <item>@drawable/ic_local_activity</item>
+        <item>@drawable/ic_local_atm</item>
+
+    </array>
+
     <string name="im_yearning_for">I\'m yearning for ...</string>
+    <string name="yearn_drink">A Drink</string>
+    <string name="yearn_food">Food</string>
+    <string name="yearn_coffee">A Coffee</string>
+    <string name="yearn_activity">Something to do</string>
+    <string name="yearn_atm">An ATM</string>
 </resources>
