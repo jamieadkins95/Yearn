@@ -1,6 +1,8 @@
 package com.jamieadkins.yearn.ui;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,4 +21,10 @@ public class QueryFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_query, container, false);
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        getActivity().setTitle(R.string.im_yearning_for);
+    }
 }
