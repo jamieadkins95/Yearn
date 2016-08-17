@@ -49,6 +49,7 @@ public class QueryFragment extends Fragment {
         }
 
         recyclerView.setAdapter(new YearningRecyclerViewAdapter(yearnTypes, yearnIcons));
+        recyclerView.addItemDecoration(new SimpleDivider(getActivity()));
     }
 
     @Override

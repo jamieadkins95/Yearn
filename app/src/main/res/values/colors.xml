@@ -9,5 +9,5 @@
     <item name="textSecondary" type="color">#B3000000</item>
     <item name="textHint" type="color">#4D000000</item>
 
-    <item name="textDivider" type="color">#1A000000</item>
+    <item name="textDivider" type="color">#1F000000</item>
 </resources>
