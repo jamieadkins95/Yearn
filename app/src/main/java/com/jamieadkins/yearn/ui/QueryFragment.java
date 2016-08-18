@@ -1,6 +1,7 @@
 package com.jamieadkins.yearn.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jamieadkins.yearn.R;
+import com.jamieadkins.yearn.ResultActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,11 +112,11 @@ public class QueryFragment extends Fragment {
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Context context = v.getContext();
-                    //Intent intent = new Intent(context, QueryActivity.class);
-                    //intent.putExtra(CheeseDetailActivity.EXTRA_NAME, holder.mBoundString);
+                    Context context = v.getContext();
+                    Intent intent = new Intent(context, ResultActivity.class);
+                    intent.putExtra(ResultActivity.EXTRA_YEARN, holder.mBoundString);
 
-                    //context.startActivity(intent);
+                    context.startActivity(intent);
                 }
             });
         }
