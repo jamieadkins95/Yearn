@@ -30,4 +30,7 @@ dependencies {
     // Google Places Web API.
     compile 'se.walkercrou:google-places-api-java:2.1.2'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
+
+    // Glide
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 }

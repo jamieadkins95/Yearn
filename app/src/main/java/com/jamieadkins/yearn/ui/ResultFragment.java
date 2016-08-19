@@ -3,78 +3,81 @@ package com.jamieadkins.yearn.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.ResultActivity;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import se.walkercrou.places.Place;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ResultFragment extends Fragment {
+public class ResultFragment extends Fragment implements ResultActivity.PlacesQueryResultListener {
+
+    RecyclerView mPlaceResultView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_result, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.results);
-        setupRecyclerView(recyclerView);
+        mPlaceResultView = (RecyclerView) rootView.findViewById(R.id.results);
+        setupRecyclerView(mPlaceResultView);
 
         return rootView;
     }
 
     private void setupRecyclerView(RecyclerView recyclerView) {
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-
-        List<String> yearnTypes = Arrays.asList(getResources().getStringArray(R.array.yearn_types));
-
-        // Get all the icons and add them to a List.
-        TypedArray icons = getResources().obtainTypedArray(R.array.yearn_icons);
-        List<Integer> yearnIcons = new ArrayList<>();
-        for (int i = 0; i < icons.length(); i++)
-        {
-            yearnIcons.add(icons.getResourceId(i, -1));
-        }
-
-        recyclerView.setAdapter(new ResultsRecyclerViewAdapter(yearnTypes));
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        ((ResultActivity) getActivity()).registerListener(this);
+    }
+
+    @Override
+    public void onResult(List<Place> result) {
+        mPlaceResultView.setAdapter(new ResultsRecyclerViewAdapter(result));
     }
 
     public static class ResultsRecyclerViewAdapter
             extends RecyclerView.Adapter<ResultsRecyclerViewAdapter.ViewHolder> {
 
-        List<String> mResults;
+        List<Place> mResults;
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
-            public String mBoundString;
-
             public final View mView;
             public final ImageView mPlaceImage;
             public final TextView mPlaceName;
+            public final TextView mPlaceUri;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
                 mPlaceImage = (ImageView) view.findViewById(R.id.placeImage);
                 mPlaceName = (TextView) view.findViewById(R.id.placeName);
+                mPlaceUri = (TextView) view.findViewById(R.id.placeUri);
             }
 
             @Override
@@ -83,11 +86,11 @@ public class ResultFragment extends Fragment {
             }
         }
 
-        public String getValueAt(int position) {
+        public Place getValueAt(int position) {
             return mResults.get(position);
         }
 
-        public ResultsRecyclerViewAdapter(List<String> items) {
+        public ResultsRecyclerViewAdapter(List<Place> items) {
             mResults = items;
         }
 
@@ -100,7 +103,16 @@ public class ResultFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mBoundString = mResults.get(position);
+            holder.mPlaceName.setText(mResults.get(position).getName());
+            holder.mPlaceUri.setText(mResults.get(position).getAddress());
+
+            if (mResults.get(position).getPhotos().size() > 0) {
+                Log.d("JAMIEA", "pictures");
+                Glide.with(holder.mPlaceImage.getContext())
+                        .load(mResults.get(position).getGoogleUrl())
+                        .fitCenter()
+                        .into(holder.mPlaceImage);
+            }
         }
 
         @Override
