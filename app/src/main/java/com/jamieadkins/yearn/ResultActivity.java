@@ -1,20 +1,17 @@
 package com.jamieadkins.yearn;
 
-import android.app.Fragment;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import com.google.maps.GeoApiContext;
+import com.google.maps.PlacesApi;
+import com.google.maps.TextSearchRequest;
+import com.google.maps.model.PlacesSearchResult;
 import com.jamieadkins.yearn.secret.ApiKeys;
 import com.jamieadkins.yearn.ui.ResultFragment;
-
-import java.util.List;
-
-import se.walkercrou.places.GooglePlaces;
-import se.walkercrou.places.GooglePlacesInterface;
-import se.walkercrou.places.Place;
 
 public class ResultActivity extends AppCompatActivity {
     public static final String EXTRA_YEARN = "com.jamieadkins.yearn.YEARN";
@@ -52,7 +49,7 @@ public class ResultActivity extends AppCompatActivity {
         mResultListener = null;
     }
 
-    private class GetNearbyPlacesTask extends AsyncTask<String, Void, List<Place>> {
+    private class GetNearbyPlacesTask extends AsyncTask<String, Void, PlacesSearchResult[]> {
 
         private String mYearn;
 
@@ -61,14 +58,25 @@ public class ResultActivity extends AppCompatActivity {
         }
 
         @Override
-        protected List<Place> doInBackground(String... strings) {
-            GooglePlaces client = new GooglePlaces(ApiKeys.GOOGLE_PLACES_API_WEB);
+        protected PlacesSearchResult[] doInBackground(String... strings) {
+            GeoApiContext context = new GeoApiContext().setApiKey(ApiKeys.GOOGLE_PLACES_API_WEB);
+            TextSearchRequest request = PlacesApi.textSearchQuery(context, mYearn + " near Rainham");
 
-            return client.getPlacesByQuery(mYearn + " near trowbridge", GooglePlacesInterface.DEFAULT_RESULTS);
+            try {
+                PlacesSearchResult[] results = request.await().results;
+                for (int i = 0; i < results.length; i++) {
+                    Log.d("JAMIEA", results[i].name);
+                }
+                return results;
+            } catch (Exception e) {
+                Log.e("JAMIEA", "request failed", e);
+            }
+
+            return null;
         }
 
         @Override
-        protected void onPostExecute(List<Place> places) {
+        protected void onPostExecute(PlacesSearchResult[] places) {
             super.onPostExecute(places);
             if (mResultListener != null) {
                 mResultListener.onResult(places);
@@ -77,6 +85,6 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     public interface PlacesQueryResultListener {
-        void onResult(List<Place> result);
+        void onResult(PlacesSearchResult[] result);
     }
 }

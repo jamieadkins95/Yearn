@@ -1,32 +1,19 @@
 package com.jamieadkins.yearn.ui;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.google.maps.model.PlacesSearchResult;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.ResultActivity;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import se.walkercrou.places.Place;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,14 +44,14 @@ public class ResultFragment extends Fragment implements ResultActivity.PlacesQue
     }
 
     @Override
-    public void onResult(List<Place> result) {
+    public void onResult(PlacesSearchResult[] result) {
         mPlaceResultView.setAdapter(new ResultsRecyclerViewAdapter(result));
     }
 
     public static class ResultsRecyclerViewAdapter
             extends RecyclerView.Adapter<ResultsRecyclerViewAdapter.ViewHolder> {
 
-        List<Place> mResults;
+        PlacesSearchResult[] mResults;
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
@@ -86,11 +73,11 @@ public class ResultFragment extends Fragment implements ResultActivity.PlacesQue
             }
         }
 
-        public Place getValueAt(int position) {
-            return mResults.get(position);
+        public PlacesSearchResult getValueAt(int position) {
+            return mResults[position];
         }
 
-        public ResultsRecyclerViewAdapter(List<Place> items) {
+        public ResultsRecyclerViewAdapter(PlacesSearchResult[] items) {
             mResults = items;
         }
 
@@ -103,21 +90,21 @@ public class ResultFragment extends Fragment implements ResultActivity.PlacesQue
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mPlaceName.setText(mResults.get(position).getName());
-            holder.mPlaceUri.setText(mResults.get(position).getAddress());
+            holder.mPlaceName.setText(mResults[position].name);
+            holder.mPlaceUri.setText(mResults[position].formattedAddress);
 
-            if (mResults.get(position).getPhotos().size() > 0) {
+            /*if (mResults[position].photos.length > 0) {
                 Log.d("JAMIEA", "pictures");
                 Glide.with(holder.mPlaceImage.getContext())
-                        .load(mResults.get(position).getGoogleUrl())
+                        .load(mResults[position].icon)
                         .fitCenter()
                         .into(holder.mPlaceImage);
-            }
+            }*/
         }
 
         @Override
         public int getItemCount() {
-            return mResults.size();
+            return mResults.length;
         }
     }
 }

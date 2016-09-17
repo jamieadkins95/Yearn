@@ -45,8 +45,7 @@ public class QueryFragment extends Fragment {
         // Get all the icons and add them to a List.
         TypedArray icons = getResources().obtainTypedArray(R.array.yearn_icons);
         List<Integer> yearnIcons = new ArrayList<>();
-        for (int i = 0; i < icons.length(); i++)
-        {
+        for (int i = 0; i < icons.length(); i++) {
             yearnIcons.add(icons.getResourceId(i, -1));
         }
 
