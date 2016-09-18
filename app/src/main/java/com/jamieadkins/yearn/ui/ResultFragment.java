@@ -3,17 +3,21 @@ package com.jamieadkins.yearn.ui;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.maps.model.PlacesSearchResult;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.ResultActivity;
+import com.jamieadkins.yearn.utils.PhotoUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -93,13 +97,25 @@ public class ResultFragment extends Fragment implements ResultActivity.PlacesQue
             holder.mPlaceName.setText(mResults[position].name);
             holder.mPlaceUri.setText(mResults[position].formattedAddress);
 
-            /*if (mResults[position].photos.length > 0) {
-                Log.d("JAMIEA", "pictures");
-                Glide.with(holder.mPlaceImage.getContext())
-                        .load(mResults[position].icon)
-                        .fitCenter()
-                        .into(holder.mPlaceImage);
-            }*/
+            // Reset the drawable so that images for other places are not recycled and used.
+            holder.mPlaceImage.setImageDrawable(
+                    ContextCompat.getDrawable(holder.mPlaceImage.getContext(), R.drawable.yearn));
+
+            if (mResults[position].photos != null) {
+                if (mResults[position].photos.length == 0) {
+                    return;
+                }
+
+                String url = PhotoUtils.getBestPhoto(mResults[position].photos);
+
+                if (url != null) {
+                    Glide.with(holder.mPlaceImage.getContext())
+                            .load(url)
+                            .fitCenter()
+                            .placeholder(R.drawable.yearn)
+                            .into(holder.mPlaceImage);
+                }
+            }
         }
 
         @Override
