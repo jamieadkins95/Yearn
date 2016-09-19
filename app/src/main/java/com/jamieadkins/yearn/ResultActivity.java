@@ -69,7 +69,7 @@ public class ResultActivity extends AppCompatActivity {
         @Override
         protected PlacesSearchResult[] doInBackground(String... strings) {
             GeoApiContext context = new GeoApiContext().setApiKey(ApiKeys.GOOGLE_PLACES_API_WEB);
-            NearbySearchRequest request = PlacesApi.nearbySearchQuery(context, mLocation).radius(5000).keyword("restaurant");
+            NearbySearchRequest request = PlacesApi.nearbySearchQuery(context, mLocation).radius(5000).keyword(mYearn);
 
             try {
                 return request.await().results;
