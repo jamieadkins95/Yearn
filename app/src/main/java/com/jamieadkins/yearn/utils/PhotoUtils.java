@@ -50,7 +50,7 @@ public class PhotoUtils {
     private static String decideBestPhoto(Photo[] photos) {
         for (Photo photo : photos) {
             double aspectRatio = (double) photo.width / (double) photo.height;
-            if (aspectRatio < 2.5 && aspectRatio > 1.5) {
+            if (aspectRatio < 2.5 && aspectRatio > 1) {
                 return photo.photoReference;
             }
         }
