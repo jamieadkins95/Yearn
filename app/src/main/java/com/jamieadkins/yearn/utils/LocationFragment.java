@@ -27,6 +27,8 @@ public class LocationFragment extends Fragment implements
     private boolean mRunning = false;
     private boolean mStartRequested = false;
 
+    private Location mLastLocation;
+
     public interface LocationFetchListener {
         void onLocationFound(Location location);
     }
@@ -131,6 +133,7 @@ public class LocationFragment extends Fragment implements
         protected void onPostExecute(Location location) {
             super.onPostExecute(location);
             mRunning = false;
+            mLastLocation = location;
 
             if (location != null) {
                 Log.d(TAG, "Location found: " + location.toString());

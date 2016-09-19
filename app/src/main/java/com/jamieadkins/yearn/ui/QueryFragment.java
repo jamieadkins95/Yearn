@@ -3,19 +3,23 @@ package com.jamieadkins.yearn.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jamieadkins.yearn.QueryActivity;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.ResultActivity;
+import com.jamieadkins.yearn.utils.LocationFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +28,9 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class QueryFragment extends Fragment {
+public class QueryFragment extends Fragment implements LocationFragment.LocationFetchListener {
+    private QueryActivity mActivity;
+    private YearningRecyclerViewAdapter mYearnAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,13 +55,27 @@ public class QueryFragment extends Fragment {
             yearnIcons.add(icons.getResourceId(i, -1));
         }
 
-        recyclerView.setAdapter(new YearningRecyclerViewAdapter(yearnTypes, yearnIcons));
+        mYearnAdapter = new YearningRecyclerViewAdapter(yearnTypes, yearnIcons);
+        recyclerView.setAdapter(mYearnAdapter);
         recyclerView.addItemDecoration(new SimpleDivider(getActivity()));
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mActivity = (QueryActivity) context;
+        mActivity.registerListener(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mActivity = null;
+    }
+
+    @Override
+    public void onLocationFound(Location location) {
+        mYearnAdapter.setLocation(location);
     }
 
     public static class YearningRecyclerViewAdapter
@@ -63,6 +83,7 @@ public class QueryFragment extends Fragment {
 
         private List<String> mYearns;
         private List<Integer> mIcons;
+        private Location mLocation;
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
             public String mBoundString;
@@ -86,6 +107,10 @@ public class QueryFragment extends Fragment {
 
         public String getValueAt(int position) {
             return mYearns.get(position);
+        }
+
+        public void setLocation(Location location) {
+            mLocation = location;
         }
 
         public YearningRecyclerViewAdapter(List<String> items, List<Integer> icons) {
@@ -114,6 +139,8 @@ public class QueryFragment extends Fragment {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, ResultActivity.class);
                     intent.putExtra(ResultActivity.EXTRA_YEARN, holder.mBoundString);
+                    intent.putExtra(ResultActivity.EXTRA_LATITUDE, mLocation.getLatitude());
+                    intent.putExtra(ResultActivity.EXTRA_LONGITUDE, mLocation.getLongitude());
 
                     context.startActivity(intent);
                 }

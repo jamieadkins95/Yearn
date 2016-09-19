@@ -7,14 +7,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.google.maps.GeoApiContext;
+import com.google.maps.NearbySearchRequest;
 import com.google.maps.PlacesApi;
 import com.google.maps.TextSearchRequest;
+import com.google.maps.model.LatLng;
 import com.google.maps.model.PlacesSearchResult;
 import com.jamieadkins.yearn.secret.ApiKeys;
 import com.jamieadkins.yearn.ui.ResultFragment;
 
 public class ResultActivity extends AppCompatActivity {
     public static final String EXTRA_YEARN = "com.jamieadkins.yearn.YEARN";
+    public static final String EXTRA_LONGITUDE = "com.jamieadkins.yearn.LONGITUDE";
+    public static final String EXTRA_LATITUDE = "com.jamieadkins.yearn.LATITUDE";
 
     private PlacesQueryResultListener mResultListener;
 
@@ -35,7 +39,10 @@ public class ResultActivity extends AppCompatActivity {
         String yearn = getIntent().getStringExtra(EXTRA_YEARN);
         setTitle(yearn);
 
-        GetNearbyPlacesTask task = new GetNearbyPlacesTask(yearn);
+        LatLng location = new LatLng(getIntent().getDoubleExtra(EXTRA_LATITUDE, 0.0),
+                getIntent().getDoubleExtra(EXTRA_LONGITUDE, 0.0));
+
+        GetNearbyPlacesTask task = new GetNearbyPlacesTask(yearn, location);
         task.execute();
     }
 
@@ -50,26 +57,24 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     private class GetNearbyPlacesTask extends AsyncTask<String, Void, PlacesSearchResult[]> {
-
+        private final String TAG = getClass().getSimpleName();
         private String mYearn;
+        private LatLng mLocation;
 
-        private GetNearbyPlacesTask(String yearn) {
+        private GetNearbyPlacesTask(String yearn, LatLng location) {
             mYearn = yearn;
+            mLocation = location;
         }
 
         @Override
         protected PlacesSearchResult[] doInBackground(String... strings) {
             GeoApiContext context = new GeoApiContext().setApiKey(ApiKeys.GOOGLE_PLACES_API_WEB);
-            TextSearchRequest request = PlacesApi.textSearchQuery(context, mYearn + " near Rainham");
+            NearbySearchRequest request = PlacesApi.nearbySearchQuery(context, mLocation).radius(5000).keyword("restaurant");
 
             try {
-                PlacesSearchResult[] results = request.await().results;
-                for (int i = 0; i < results.length; i++) {
-                    Log.d("JAMIEA", results[i].name);
-                }
-                return results;
+                return request.await().results;
             } catch (Exception e) {
-                Log.e("JAMIEA", "request failed", e);
+                Log.e(TAG, "Places query failed.", e);
             }
 
             return null;

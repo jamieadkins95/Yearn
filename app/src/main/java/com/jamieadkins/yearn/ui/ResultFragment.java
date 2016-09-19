@@ -95,7 +95,7 @@ public class ResultFragment extends Fragment implements ResultActivity.PlacesQue
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mPlaceName.setText(mResults[position].name);
-            holder.mPlaceUri.setText(mResults[position].formattedAddress);
+            holder.mPlaceUri.setText(mResults[position].vicinity);
 
             // Reset the drawable so that images for other places are not recycled and used.
             holder.mPlaceImage.setImageDrawable(

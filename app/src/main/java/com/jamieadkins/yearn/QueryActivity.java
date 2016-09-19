@@ -19,7 +19,7 @@ public class QueryActivity extends AppCompatActivity implements LocationFragment
     private static final String TAG_LOCATION_FRAGMENT = LocationFragment.class.getSimpleName();
 
     private LocationFragment mLocationFragment;
-    private Location mLastLocation;
+    private LocationFragment.LocationFetchListener mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +84,18 @@ public class QueryActivity extends AppCompatActivity implements LocationFragment
 
     @Override
     public void onLocationFound(Location location) {
-        mLastLocation = location;
+        if (mListener != null) {
+            mListener.onLocationFound(location);
+        }
+    }
+
+    public void registerListener(LocationFragment.LocationFetchListener listener) {
+        mListener = listener;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mListener = null;
     }
 }
