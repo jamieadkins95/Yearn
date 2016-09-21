@@ -47,6 +47,9 @@ public class ContextualYearnRecyclerViewAdapter extends RecyclerView.Adapter<Rec
                 Context context = v.getContext();
                 Intent intent = new Intent(context, ResultActivity.class);
 
+                intent.putExtra(ResultActivity.EXTRA_YEARN, "Lunch");
+                intent.putExtra(ResultActivity.EXTRA_LATITUDE, 51.505203);
+                intent.putExtra(ResultActivity.EXTRA_LONGITUDE, -0.224475);
                 context.startActivity(intent);
             }
         });

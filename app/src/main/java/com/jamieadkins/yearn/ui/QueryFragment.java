@@ -159,9 +159,6 @@ public class QueryFragment extends Fragment implements LocationFragment.Location
                 public void onClick(View v) {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, ResultActivity.class);
-                    intent.putExtra(ResultActivity.EXTRA_YEARN, holder.mBoundString);
-                    intent.putExtra(ResultActivity.EXTRA_LATITUDE, mLocation.getLatitude());
-                    intent.putExtra(ResultActivity.EXTRA_LONGITUDE, mLocation.getLongitude());
 
                     context.startActivity(intent);
                 }
