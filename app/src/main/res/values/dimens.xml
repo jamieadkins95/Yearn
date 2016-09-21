@@ -3,4 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="activity_vertical_margin_small">8dp</dimen>
+
+    <dimen name="yearning_header_margin_left">24dp</dimen>
+    <dimen name="yearning_header_margin_top">32dp</dimen>
 </resources>
