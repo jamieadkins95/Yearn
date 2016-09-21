@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="yearn_types">
+        <item>@string/yearn_food</item>
+        <item>@string/yearn_drink</item>
+        <item>@string/yearn_coffee</item>
+        <item>@string/yearn_park</item>
+        <item>@string/yearn_atm</item>
+        <item>@string/yearn_activity</item>
+        <item>@string/yearn_night_out</item>
+        <item>@string/yearn_movie</item>
+        <item>@string/yearn_book</item>
+    </string-array>
+
+    <array name="yearn_icons">
+        <item>@drawable/ic_local_dining</item>
+        <item>@drawable/ic_local_drink</item>
+        <item>@drawable/ic_local_cafe</item>
+        <item>@drawable/ic_local_florist</item>
+        <item>@drawable/ic_local_atm</item>
+        <item>@drawable/ic_local_activity</item>
+        <item>@drawable/ic_local_bar</item>
+        <item>@drawable/ic_local_movies</item>
+        <item>@drawable/ic_local_library</item>
+    </array>
+</resources>
