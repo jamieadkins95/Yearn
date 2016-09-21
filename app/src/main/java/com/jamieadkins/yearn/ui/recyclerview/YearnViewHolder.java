@@ -11,12 +11,12 @@ import com.jamieadkins.yearn.R;
  * ViewHolder for general yearns
  */
 
-public class GeneralYearnViewHolder extends RecyclerView.ViewHolder {
+public class YearnViewHolder extends RecyclerView.ViewHolder {
     private final View mView;
     private final ImageView mImageView;
     private final TextView mTextView;
 
-    public GeneralYearnViewHolder(View view) {
+    public YearnViewHolder(View view) {
         super(view);
         mView = view;
         mImageView = (ImageView) view.findViewById(R.id.yearning_icon);

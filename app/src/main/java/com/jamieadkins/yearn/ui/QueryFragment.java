@@ -32,9 +32,6 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class QueryFragment extends Fragment implements LocationFragment.LocationFetchListener {
-    private static final int EVENING_END = 4;
-    private static final int MORNING_END = 12;
-    private static final int AFTERNOON_END = 17;
     private QueryActivity mActivity;
     private RecyclerView.Adapter<RecyclerView.ViewHolder> mYearnAdapter;
 
@@ -65,6 +62,8 @@ public class QueryFragment extends Fragment implements LocationFragment.Location
                 getString(R.string.something_else), "");
 
         // Get the context specific yearns.
+        List<Yearn> contextualYearns = Yearn.getContextualYearns(rightNow.get(Calendar.DAY_OF_WEEK),
+                Yearn.getTimeFromHourOfDay(rightNow.get(Calendar.HOUR_OF_DAY)));
 
         // Organise all of the general yearns.
         ArrayList<Yearn> generalYearns = new ArrayList<>();
@@ -78,9 +77,8 @@ public class QueryFragment extends Fragment implements LocationFragment.Location
         // Give it all to the adapter.
         mYearnAdapter = new QueryRecyclerViewAdapter(contextualHeader,
                 somethingElseHeader,
-                generalYearns, generalYearns);
+                contextualYearns, generalYearns);
         recyclerView.setAdapter(mYearnAdapter);
-        recyclerView.addItemDecoration(new SimpleDivider(getActivity()));
     }
 
     @Override
@@ -144,7 +142,7 @@ public class QueryFragment extends Fragment implements LocationFragment.Location
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_simple_yearning, parent, false);
+                    .inflate(R.layout.item_simple_yearn, parent, false);
             return new ViewHolder(view);
         }
 
@@ -198,16 +196,15 @@ public class QueryFragment extends Fragment implements LocationFragment.Location
     }
 
     private static String getTimeFromCalendar(Context context, int hourOfDay) {
-        if (hourOfDay > 0 && hourOfDay <= EVENING_END) {
-            return context.getString(R.string.evening);
-        } else if (hourOfDay > EVENING_END && hourOfDay <= MORNING_END) {
-            return context.getString(R.string.morning);
-        } else if (hourOfDay > MORNING_END && hourOfDay <= AFTERNOON_END) {
-            return context.getString(R.string.afternoon);
-        } else if (hourOfDay > AFTERNOON_END && hourOfDay <= 24) {
-            return context.getString(R.string.evening);
-        } else {
-            throw new RuntimeException("Received an hour of the day that wasn't between 0 and 24");
+        switch (Yearn.getTimeFromHourOfDay(hourOfDay)) {
+            case MORNING:
+                return context.getString(R.string.morning);
+            case AFTERNOON:
+                return context.getString(R.string.afternoon);
+            case EVENING:
+                return context.getString(R.string.evening);
+            default:
+                throw new RuntimeException("Time of day not implemented!");
         }
     }
 }

@@ -5,5 +5,8 @@
     <dimen name="activity_vertical_margin_small">8dp</dimen>
 
     <dimen name="yearning_header_margin_left">24dp</dimen>
-    <dimen name="yearning_header_margin_top">32dp</dimen>
+    <dimen name="yearning_header_margin_top">24dp</dimen>
+
+    <dimen name="item_contextual_yearn_width">150dp</dimen>
+    <dimen name="item_contextual_yearn_height">125dp</dimen>
 </resources>

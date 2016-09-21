@@ -3,6 +3,7 @@ package com.jamieadkins.yearn.ui.recyclerview;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,12 +75,12 @@ public class QueryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 break;
             case CONTEXTUAL_YEARN:
                 // Inner recycler view contain contextual yearns
-                View contextualYearns = inflater.inflate(R.layout.item_simple_yearning, parent, false);
-                viewHolder = new GeneralYearnViewHolder(contextualYearns);
+                View contextualYearns = inflater.inflate(R.layout.item_horizontal_yearn_recycler_view, parent, false);
+                viewHolder = new InnerRecyclerViewViewHolder(contextualYearns);
                 break;
             case GENERAL_YEARN:
-                View generalYearns = inflater.inflate(R.layout.item_simple_yearning, parent, false);
-                viewHolder = new GeneralYearnViewHolder(generalYearns);
+                View generalYearns = inflater.inflate(R.layout.item_simple_yearn, parent, false);
+                viewHolder = new YearnViewHolder(generalYearns);
                 break;
             default:
                 throw new RuntimeException("View type not implemented!");
@@ -96,11 +97,11 @@ public class QueryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 configureHeaderViewHolder(headerViewHolder, position);
                 break;
             case CONTEXTUAL_YEARN:
-                GeneralYearnViewHolder contextualYearnViewHolder = (GeneralYearnViewHolder) viewHolder;
-                configureGeneralYearnViewHolder(contextualYearnViewHolder, position + 3);
+                InnerRecyclerViewViewHolder contextualYearnViewHolder = (InnerRecyclerViewViewHolder) viewHolder;
+                configureInnerRecyclerViewViewHolder(contextualYearnViewHolder, position);
                 break;
             case GENERAL_YEARN:
-                GeneralYearnViewHolder generalYearnViewHolder = (GeneralYearnViewHolder) viewHolder;
+                YearnViewHolder generalYearnViewHolder = (YearnViewHolder) viewHolder;
                 configureGeneralYearnViewHolder(generalYearnViewHolder, position);
                 break;
             default:
@@ -108,7 +109,20 @@ public class QueryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    private void configureGeneralYearnViewHolder(final GeneralYearnViewHolder generalYearnViewHolder,
+    private void configureInnerRecyclerViewViewHolder(
+            InnerRecyclerViewViewHolder contextualYearnViewHolder, int position) {
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(
+                contextualYearnViewHolder.getRecyclerView().getContext(),
+                LinearLayoutManager.HORIZONTAL, false);
+
+        contextualYearnViewHolder.getRecyclerView().setLayoutManager(layoutManager);
+        ContextualYearnRecyclerViewAdapter contextualYearnRecyclerViewAdapter =
+                new ContextualYearnRecyclerViewAdapter(mContextualYearns);
+        contextualYearnViewHolder.getRecyclerView().setAdapter(contextualYearnRecyclerViewAdapter);
+    }
+
+    private void configureGeneralYearnViewHolder(final YearnViewHolder generalYearnViewHolder,
                                                  int position) {
         int adjustedPosition = getAdjustedPosition(position);
         generalYearnViewHolder.getTextView().setText(mGeneralYearns.get(adjustedPosition).getTitle());
