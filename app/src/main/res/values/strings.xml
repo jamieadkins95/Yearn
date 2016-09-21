@@ -12,7 +12,7 @@
     <string name="yearn_book">A Good Book</string>
     <string name="yearn_movie">A Good Movie</string>
 
-    <string name="day_header">It's %1$s %2$s</string>
+    <string name="day_header">It\'s %1$s %2$s</string>
 
     <array name="weekdays">
         <item>Monday</item>
