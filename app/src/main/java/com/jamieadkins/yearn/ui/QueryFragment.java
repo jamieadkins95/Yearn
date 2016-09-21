@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +18,25 @@ import android.widget.TextView;
 import com.jamieadkins.yearn.QueryActivity;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.ResultActivity;
+import com.jamieadkins.yearn.Yearn;
+import com.jamieadkins.yearn.ui.recyclerview.QueryRecyclerViewAdapter;
+import com.jamieadkins.yearn.ui.recyclerview.RecyclerViewHeader;
 import com.jamieadkins.yearn.utils.LocationFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class QueryFragment extends Fragment implements LocationFragment.LocationFetchListener {
+    private static final int EVENING_END = 4;
+    private static final int MORNING_END = 12;
+    private static final int AFTERNOON_END = 17;
     private QueryActivity mActivity;
-    private YearningRecyclerViewAdapter mYearnAdapter;
+    private RecyclerView.Adapter<RecyclerView.ViewHolder> mYearnAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,16 +52,33 @@ public class QueryFragment extends Fragment implements LocationFragment.Location
     private void setupRecyclerView(RecyclerView recyclerView) {
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
 
+        // Get current day and time for the contextual header.
+        Calendar rightNow = Calendar.getInstance();
+        final String weekday = getWeekdayFromCalendar(getActivity(), rightNow.get(Calendar.DAY_OF_WEEK));
+        final String timeOfDay = getTimeFromCalendar(getActivity(), rightNow.get(Calendar.HOUR_OF_DAY));
+        RecyclerViewHeader contextualHeader = new RecyclerViewHeader(
+                String.format(getString(R.string.day_header), weekday, timeOfDay),
+                getString(R.string.im_yearning_for));
+
+        // Simple header that says "Something Else"
+        RecyclerViewHeader somethingElseHeader = new RecyclerViewHeader(
+                getString(R.string.something_else), "");
+
+        // Get the context specific yearns.
+
+        // Organise all of the general yearns.
+        ArrayList<Yearn> generalYearns = new ArrayList<>();
         List<String> yearnTypes = Arrays.asList(getResources().getStringArray(R.array.yearn_types));
 
-        // Get all the icons and add them to a List.
         TypedArray icons = getResources().obtainTypedArray(R.array.yearn_icons);
-        List<Integer> yearnIcons = new ArrayList<>();
         for (int i = 0; i < icons.length(); i++) {
-            yearnIcons.add(icons.getResourceId(i, -1));
+            generalYearns.add(new Yearn(yearnTypes.get(i), icons.getResourceId(i, -1)));
         }
 
-        mYearnAdapter = new YearningRecyclerViewAdapter(yearnTypes, yearnIcons);
+        // Give it all to the adapter.
+        mYearnAdapter = new QueryRecyclerViewAdapter(contextualHeader,
+                somethingElseHeader,
+                generalYearns, generalYearns);
         recyclerView.setAdapter(mYearnAdapter);
         recyclerView.addItemDecoration(new SimpleDivider(getActivity()));
     }
@@ -75,7 +98,7 @@ public class QueryFragment extends Fragment implements LocationFragment.Location
 
     @Override
     public void onLocationFound(Location location) {
-        mYearnAdapter.setLocation(location);
+        //mYearnAdapter.setLocation(location);
     }
 
     public static class YearningRecyclerViewAdapter
@@ -121,7 +144,7 @@ public class QueryFragment extends Fragment implements LocationFragment.Location
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_yearning, parent, false);
+                    .inflate(R.layout.item_simple_yearning, parent, false);
             return new ViewHolder(view);
         }
 
@@ -150,6 +173,41 @@ public class QueryFragment extends Fragment implements LocationFragment.Location
         @Override
         public int getItemCount() {
             return mYearns.size();
+        }
+    }
+
+    private static String getWeekdayFromCalendar(Context context, int dayOfWeek) {
+        switch (dayOfWeek) {
+            case Calendar.MONDAY:
+                return context.getString(R.string.monday);
+            case Calendar.TUESDAY:
+                return context.getString(R.string.tuesday);
+            case Calendar.WEDNESDAY:
+                return context.getString(R.string.wednesday);
+            case Calendar.THURSDAY:
+                return context.getString(R.string.thursday);
+            case Calendar.FRIDAY:
+                return context.getString(R.string.friday);
+            case Calendar.SATURDAY:
+                return context.getString(R.string.saturday);
+            case Calendar.SUNDAY:
+                return context.getString(R.string.sunday);
+            default:
+                throw new RuntimeException("Received a weekday that wasn't a day of the week!");
+        }
+    }
+
+    private static String getTimeFromCalendar(Context context, int hourOfDay) {
+        if (hourOfDay > 0 && hourOfDay <= EVENING_END) {
+            return context.getString(R.string.evening);
+        } else if (hourOfDay > EVENING_END && hourOfDay <= MORNING_END) {
+            return context.getString(R.string.morning);
+        } else if (hourOfDay > MORNING_END && hourOfDay <= AFTERNOON_END) {
+            return context.getString(R.string.afternoon);
+        } else if (hourOfDay > AFTERNOON_END && hourOfDay <= 24) {
+            return context.getString(R.string.evening);
+        } else {
+            throw new RuntimeException("Received an hour of the day that wasn't between 0 and 24");
         }
     }
 }

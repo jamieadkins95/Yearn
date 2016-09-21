@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Yearn</string>
 
-    <string name="im_yearning_for">I\'m yearning for ...</string>
+    <string name="im_yearning_for">I\'m yearning for…</string>
     <string name="yearn_drink">A Drink</string>
     <string name="yearn_food">Food</string>
     <string name="yearn_coffee">A Coffee</string>
@@ -13,21 +13,18 @@
     <string name="yearn_movie">A Good Movie</string>
 
     <string name="day_header">It\'s %1$s %2$s</string>
+    <string name="something_else">Something else</string>
 
-    <array name="weekdays">
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-        <item>Sunday</item>
-    </array>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
 
-    <array name="times_of_day">
-        <item>morning</item>
-        <item>afternoon</item>
-        <item>evening</item>
-    </array>
+    <string name="morning">morning</string>
+    <string name="afternoon">afternoon</string>
+    <string name="evening">evening</string>
 
 </resources>

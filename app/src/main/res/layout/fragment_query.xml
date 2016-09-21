@@ -5,33 +5,9 @@
     android:orientation="vertical"
     tools:context="com.jamieadkins.yearn.ui.QueryFragment">
 
-    <TextView
-        android:paddingTop="@dimen/yearning_header_margin_top"
-        android:paddingLeft="@dimen/yearning_header_margin_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="It's Monday morning"
-        android:textSize="20sp"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:paddingLeft="@dimen/yearning_header_margin_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="I'm yearning for..."/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/yearningList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-
-    <TextView
-        android:paddingTop="@dimen/yearning_header_margin_top"
-        android:paddingLeft="@dimen/yearning_header_margin_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Something else"
-        android:textSize="20sp"
-        android:textStyle="bold"/>
 
 </LinearLayout>
