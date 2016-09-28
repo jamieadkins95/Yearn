@@ -67,12 +67,16 @@ public class QueryFragment extends Fragment implements LocationFragment.Location
 
         // Organise all of the general yearns.
         ArrayList<Yearn> generalYearns = new ArrayList<>();
-        List<String> yearnTypes = Arrays.asList(getResources().getStringArray(R.array.yearn_types));
 
+        TypedArray yearnTypes = getResources().obtainTypedArray(R.array.yearn_types);
         TypedArray icons = getResources().obtainTypedArray(R.array.yearn_icons);
         for (int i = 0; i < icons.length(); i++) {
-            generalYearns.add(new Yearn(yearnTypes.get(i), icons.getResourceId(i, -1)));
+            generalYearns.add(new Yearn(yearnTypes.getResourceId(i, -1), icons.getResourceId(i, -1)));
         }
+
+        // Recycle typed array.
+        yearnTypes.recycle();
+        icons.recycle();
 
         // Give it all to the adapter.
         mYearnAdapter = new QueryRecyclerViewAdapter(contextualHeader,

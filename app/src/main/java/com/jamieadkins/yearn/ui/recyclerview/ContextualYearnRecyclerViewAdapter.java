@@ -35,7 +35,9 @@ public class ContextualYearnRecyclerViewAdapter extends RecyclerView.Adapter<Rec
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         YearnViewHolder yearnViewHolder = (YearnViewHolder) viewHolder;
-        yearnViewHolder.getTextView().setText(mContextualYearns.get(position).getTitle());
+        yearnViewHolder.getTextView().setText(mContextualYearns.get(position).getTitleId());
+
+        // TODO: Should potentially use glide here to handle image.
         yearnViewHolder.getImageView().setImageDrawable(
                 ContextCompat.getDrawable(
                         yearnViewHolder.getImageView().getContext(),

@@ -125,11 +125,13 @@ public class QueryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     private void configureGeneralYearnViewHolder(final YearnViewHolder generalYearnViewHolder,
                                                  int position) {
         int adjustedPosition = getAdjustedPosition(position);
-        generalYearnViewHolder.getTextView().setText(mGeneralYearns.get(adjustedPosition).getTitle());
+        Context context = generalYearnViewHolder.getOverallView().getContext();
+        generalYearnViewHolder.getTextView().setText(mGeneralYearns.get(adjustedPosition).getTitleId());
+
+        // TODO: Should potentially use glide here to handle image.
         generalYearnViewHolder.getImageView().setImageDrawable(
                 ContextCompat.getDrawable(
-                        generalYearnViewHolder.getImageView().getContext(),
-                        mGeneralYearns.get(adjustedPosition).getDrawable()));
+                        context, mGeneralYearns.get(adjustedPosition).getDrawable()));
 
         generalYearnViewHolder.getOverallView().setOnClickListener(new View.OnClickListener() {
             @Override
