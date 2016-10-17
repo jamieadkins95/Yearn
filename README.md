@@ -5,4 +5,4 @@ Yearn is a WIP app that is designed to help you find nearby places based on your
 in the morning, Yearn may suggest breakfast places or coffee shops.
 
 Here are some screenshots:
-![Main Menu](Screenshot_2016-10-17-17-12-28.png) ![Lunch](Screenshot_2016-10-17-17-12-47.png)
+<img src="Screenshot_2016-10-17-17-12-28.png" width="360"> <img src="Screenshot_2016-10-17-17-12-47.png" width="360">
