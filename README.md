@@ -6,4 +6,4 @@ in the morning, Yearn may suggest breakfast places or coffee shops.
 
 Here are some screenshots:
 
-<img src="Screenshot_2016-10-17-17-12-28.png" width="360"> <img src="Screenshot_2016-10-17-17-12-47.png" width="360">
+<img src="marketing/Screenshot_2016-10-17-17-12-28.png" width="360"> <img src="marketing/Screenshot_2016-10-17-17-12-47.png" width="360">
