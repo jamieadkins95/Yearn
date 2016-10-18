@@ -19,7 +19,7 @@ import java.util.List;
  * RecyclerView adapter to show possible yearns in {@link QueryFragment}.
  */
 
-public class ContextualYearnRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ContextualYearnRecyclerViewAdapter extends BaseRecyclerViewAdapter {
     private List<Yearn> mContextualYearns;
 
     public ContextualYearnRecyclerViewAdapter(List<Yearn> contextualYearns) {
@@ -50,8 +50,8 @@ public class ContextualYearnRecyclerViewAdapter extends RecyclerView.Adapter<Rec
                 Intent intent = new Intent(context, ResultActivity.class);
 
                 intent.putExtra(ResultActivity.EXTRA_YEARN, "Lunch");
-                intent.putExtra(ResultActivity.EXTRA_LATITUDE, 51.505203);
-                intent.putExtra(ResultActivity.EXTRA_LONGITUDE, -0.224475);
+                intent.putExtra(ResultActivity.EXTRA_LATITUDE, mLocation.getLatitude());
+                intent.putExtra(ResultActivity.EXTRA_LONGITUDE, mLocation.getLongitude());
                 context.startActivity(intent);
             }
         });

@@ -2,6 +2,7 @@ package com.jamieadkins.yearn.ui.recyclerview;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +21,7 @@ import java.util.List;
  * RecyclerView adapter to show possible yearns in {@link QueryFragment}.
  */
 
-public class QueryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class QueryRecyclerViewAdapter extends BaseRecyclerViewAdapter {
 
     private static final int HEADER = 0;
     private static final int CONTEXTUAL_YEARN = 1;
@@ -39,6 +40,8 @@ public class QueryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     private RecyclerViewHeader mSomethingElseHeader;
     private List<Yearn> mContextualYearns;
     private List<Yearn> mGeneralYearns;
+
+    private ContextualYearnRecyclerViewAdapter mInnerAdapter;
 
     public QueryRecyclerViewAdapter(RecyclerViewHeader contextualHeader,
                                     RecyclerViewHeader somethingElseHeader,
@@ -117,9 +120,9 @@ public class QueryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 LinearLayoutManager.HORIZONTAL, false);
 
         contextualYearnViewHolder.getRecyclerView().setLayoutManager(layoutManager);
-        ContextualYearnRecyclerViewAdapter contextualYearnRecyclerViewAdapter =
+        mInnerAdapter =
                 new ContextualYearnRecyclerViewAdapter(mContextualYearns);
-        contextualYearnViewHolder.getRecyclerView().setAdapter(contextualYearnRecyclerViewAdapter);
+        contextualYearnViewHolder.getRecyclerView().setAdapter(mInnerAdapter);
     }
 
     private void configureGeneralYearnViewHolder(final YearnViewHolder generalYearnViewHolder,
@@ -140,6 +143,9 @@ public class QueryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 Intent intent = new Intent(context, ResultActivity.class);
                 // Viewholder needs a bound query to access here.
 
+                intent.putExtra(ResultActivity.EXTRA_YEARN, "lunch");
+                intent.putExtra(ResultActivity.EXTRA_LATITUDE, mLocation.getLatitude());
+                intent.putExtra(ResultActivity.EXTRA_LONGITUDE, mLocation.getLongitude());
                 context.startActivity(intent);
             }
         });
@@ -164,5 +170,11 @@ public class QueryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public int getItemCount() {
         return mGeneralYearns.size() + INDEX_ADJUSTMENT;
+    }
+
+    @Override
+    public void setLocation(Location location) {
+        super.setLocation(location);
+        mInnerAdapter.setLocation(location);
     }
 }

@@ -19,6 +19,7 @@ import com.jamieadkins.yearn.QueryActivity;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.ResultActivity;
 import com.jamieadkins.yearn.Yearn;
+import com.jamieadkins.yearn.ui.recyclerview.BaseRecyclerViewAdapter;
 import com.jamieadkins.yearn.ui.recyclerview.QueryRecyclerViewAdapter;
 import com.jamieadkins.yearn.ui.recyclerview.RecyclerViewHeader;
 import com.jamieadkins.yearn.utils.LocationFragment;
@@ -33,7 +34,7 @@ import java.util.List;
  */
 public class QueryFragment extends Fragment implements LocationFragment.LocationFetchListener {
     private QueryActivity mActivity;
-    private RecyclerView.Adapter<RecyclerView.ViewHolder> mYearnAdapter;
+    private BaseRecyclerViewAdapter mYearnAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,7 +101,7 @@ public class QueryFragment extends Fragment implements LocationFragment.Location
 
     @Override
     public void onLocationFound(Location location) {
-        //mYearnAdapter.setLocation(location);
+        mYearnAdapter.setLocation(location);
     }
 
     private static String getWeekdayFromCalendar(Context context, int dayOfWeek) {
