@@ -144,7 +144,6 @@ public class QueryRecyclerViewAdapter extends BaseRecyclerViewAdapter {
             public void onClick(View v) {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, ResultActivity.class);
-                // Viewholder needs a bound query to access here.
 
                 intent.putExtra(ResultActivity.EXTRA_YEARN,
                         yearnViewHolder.getBoundYearn().getQueryKeyword());
