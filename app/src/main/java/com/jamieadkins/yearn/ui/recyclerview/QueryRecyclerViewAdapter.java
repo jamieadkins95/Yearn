@@ -143,6 +143,7 @@ public class QueryRecyclerViewAdapter extends BaseRecyclerViewAdapter {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, ResultActivity.class);
 
+                // TODO: Move this to QueryFragment or QueryActivity so that adapter has less control.
                 intent.putExtra(ResultActivity.EXTRA_YEARN,
                         yearnViewHolder.getBoundYearn().getQueryKeyword());
                 intent.putExtra(ResultActivity.EXTRA_LATITUDE, mLocation.getLatitude());
