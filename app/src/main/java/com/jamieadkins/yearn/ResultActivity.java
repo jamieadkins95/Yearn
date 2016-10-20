@@ -9,7 +9,6 @@ import android.util.Log;
 import com.google.maps.GeoApiContext;
 import com.google.maps.NearbySearchRequest;
 import com.google.maps.PlacesApi;
-import com.google.maps.TextSearchRequest;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.PlacesSearchResult;
 import com.jamieadkins.yearn.secret.ApiKeys;
@@ -36,13 +35,13 @@ public class ResultActivity extends AppCompatActivity {
                     .commit();
         }
 
-        String yearn = getIntent().getStringExtra(EXTRA_YEARN);
-        setTitle(yearn);
+        String keyword = getIntent().getStringExtra(EXTRA_YEARN);
+        setTitle(keyword);
 
         LatLng location = new LatLng(getIntent().getDoubleExtra(EXTRA_LATITUDE, 0.0),
                 getIntent().getDoubleExtra(EXTRA_LONGITUDE, 0.0));
 
-        GetNearbyPlacesTask task = new GetNearbyPlacesTask(yearn, location);
+        GetNearbyPlacesTask task = new GetNearbyPlacesTask(keyword, location);
         task.execute();
     }
 
@@ -58,18 +57,20 @@ public class ResultActivity extends AppCompatActivity {
 
     private class GetNearbyPlacesTask extends AsyncTask<String, Void, PlacesSearchResult[]> {
         private final String TAG = getClass().getSimpleName();
-        private String mYearn;
+        private String mQueryKeyword;
         private LatLng mLocation;
 
-        private GetNearbyPlacesTask(String yearn, LatLng location) {
-            mYearn = yearn;
+        private GetNearbyPlacesTask(String keyword, LatLng location) {
+            mQueryKeyword = keyword;
             mLocation = location;
         }
 
         @Override
         protected PlacesSearchResult[] doInBackground(String... strings) {
             GeoApiContext context = new GeoApiContext().setApiKey(ApiKeys.GOOGLE_PLACES_API_WEB);
-            NearbySearchRequest request = PlacesApi.nearbySearchQuery(context, mLocation).radius(5000).keyword(mYearn);
+            NearbySearchRequest request = PlacesApi.nearbySearchQuery(context, mLocation)
+                    .radius(3000)
+                    .keyword(mQueryKeyword);
 
             try {
                 return request.await().results;

@@ -125,25 +125,29 @@ public class QueryRecyclerViewAdapter extends BaseRecyclerViewAdapter {
         contextualYearnViewHolder.getRecyclerView().setAdapter(mInnerAdapter);
     }
 
-    private void configureGeneralYearnViewHolder(final YearnViewHolder generalYearnViewHolder,
+    private void configureGeneralYearnViewHolder(final YearnViewHolder yearnViewHolder,
                                                  int position) {
         int adjustedPosition = getAdjustedPosition(position);
-        Context context = generalYearnViewHolder.getOverallView().getContext();
-        generalYearnViewHolder.getTextView().setText(mGeneralYearns.get(adjustedPosition).getTitleId());
+        Context context = yearnViewHolder.getOverallView().getContext();
+        String text = context.getString(mGeneralYearns.get(adjustedPosition).getTitleId());
+        mGeneralYearns.get(adjustedPosition).setQueryKeyword(text);
+        yearnViewHolder.getTextView().setText(text);
+        yearnViewHolder.setBoundYearn(mGeneralYearns.get(adjustedPosition));
 
         // TODO: Should potentially use glide here to handle image.
-        generalYearnViewHolder.getImageView().setImageDrawable(
+        yearnViewHolder.getImageView().setImageDrawable(
                 ContextCompat.getDrawable(
                         context, mGeneralYearns.get(adjustedPosition).getDrawable()));
 
-        generalYearnViewHolder.getOverallView().setOnClickListener(new View.OnClickListener() {
+        yearnViewHolder.getOverallView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, ResultActivity.class);
                 // Viewholder needs a bound query to access here.
 
-                intent.putExtra(ResultActivity.EXTRA_YEARN, "lunch");
+                intent.putExtra(ResultActivity.EXTRA_YEARN,
+                        yearnViewHolder.getBoundYearn().getQueryKeyword());
                 intent.putExtra(ResultActivity.EXTRA_LATITUDE, mLocation.getLatitude());
                 intent.putExtra(ResultActivity.EXTRA_LONGITUDE, mLocation.getLongitude());
                 context.startActivity(intent);

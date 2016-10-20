@@ -1,5 +1,7 @@
 package com.jamieadkins.yearn;
 
+import com.google.maps.NearbySearchRequest;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -34,6 +36,7 @@ public class Yearn {
 
     private int mTitleId;
     private int mDrawableId;
+    private String mQueryKeyword;
 
     public Yearn(int titleId, int drawable) {
         mTitleId = titleId;
@@ -46,6 +49,14 @@ public class Yearn {
 
     public int getDrawable() {
         return mDrawableId;
+    }
+
+    public String getQueryKeyword() {
+        return mQueryKeyword;
+    }
+
+    public void setQueryKeyword(String queryKeyword) {
+        mQueryKeyword = queryKeyword;
     }
 
     public static List<Yearn> getContextualYearns(int dayOfWeek, TimeOfDay timeOfDay) {

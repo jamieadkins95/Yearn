@@ -34,8 +34,12 @@ public class ContextualYearnRecyclerViewAdapter extends BaseRecyclerViewAdapter 
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        YearnViewHolder yearnViewHolder = (YearnViewHolder) viewHolder;
-        yearnViewHolder.getTextView().setText(mContextualYearns.get(position).getTitleId());
+        final YearnViewHolder yearnViewHolder = (YearnViewHolder) viewHolder;
+        String text = yearnViewHolder.getTextView().getContext()
+                .getString(mContextualYearns.get(position).getTitleId());
+        mContextualYearns.get(position).setQueryKeyword(text);
+        yearnViewHolder.setBoundYearn(mContextualYearns.get(position));
+        yearnViewHolder.getTextView().setText(text);
 
         // TODO: Should potentially use glide here to handle image.
         yearnViewHolder.getImageView().setImageDrawable(
@@ -49,7 +53,8 @@ public class ContextualYearnRecyclerViewAdapter extends BaseRecyclerViewAdapter 
                 Context context = v.getContext();
                 Intent intent = new Intent(context, ResultActivity.class);
 
-                intent.putExtra(ResultActivity.EXTRA_YEARN, "Lunch");
+                intent.putExtra(ResultActivity.EXTRA_YEARN,
+                        yearnViewHolder.getBoundYearn().getQueryKeyword());
                 intent.putExtra(ResultActivity.EXTRA_LATITUDE, mLocation.getLatitude());
                 intent.putExtra(ResultActivity.EXTRA_LONGITUDE, mLocation.getLongitude());
                 context.startActivity(intent);

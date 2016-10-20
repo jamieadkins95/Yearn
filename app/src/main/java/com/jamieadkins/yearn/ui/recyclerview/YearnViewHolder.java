@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jamieadkins.yearn.R;
+import com.jamieadkins.yearn.Yearn;
 
 /**
  * ViewHolder for general yearns
@@ -15,6 +16,8 @@ public class YearnViewHolder extends RecyclerView.ViewHolder {
     private final View mView;
     private final ImageView mImageView;
     private final TextView mTextView;
+
+    private Yearn mBoundYearn;
 
     public YearnViewHolder(View view) {
         super(view);
@@ -33,6 +36,14 @@ public class YearnViewHolder extends RecyclerView.ViewHolder {
 
     public TextView getTextView() {
         return mTextView;
+    }
+
+    public Yearn getBoundYearn() {
+        return mBoundYearn;
+    }
+
+    public void setBoundYearn(Yearn yearn) {
+        mBoundYearn = yearn;
     }
 
     @Override
