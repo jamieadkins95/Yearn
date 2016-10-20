@@ -41,7 +41,7 @@ public class ContextualYearnRecyclerViewAdapter extends BaseRecyclerViewAdapter 
         yearnViewHolder.setBoundYearn(mContextualYearns.get(position));
         yearnViewHolder.getTextView().setText(text);
 
-        // TODO: Should potentially use glide here to handle image.
+        // Glide can't handle vector drawables so we have to do this manually.
         yearnViewHolder.getImageView().setImageDrawable(
                 ContextCompat.getDrawable(
                         yearnViewHolder.getImageView().getContext(),

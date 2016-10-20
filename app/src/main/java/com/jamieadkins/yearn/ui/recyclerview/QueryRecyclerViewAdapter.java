@@ -33,7 +33,6 @@ public class QueryRecyclerViewAdapter extends BaseRecyclerViewAdapter {
 
     // Adjustment required so that getting yearns from the list is correct.
     // 2 headers + 1 horizontal yearn list = 3.
-    // 2 headers + 1 horizontal yearn list = 3.
     private static final int INDEX_ADJUSTMENT = 3;
 
     private RecyclerViewHeader mContextualHeader;
@@ -77,7 +76,7 @@ public class QueryRecyclerViewAdapter extends BaseRecyclerViewAdapter {
                 viewHolder = new HeaderViewHolder(headerView);
                 break;
             case CONTEXTUAL_YEARN:
-                // Inner recycler view contain contextual yearns
+                // Inner recycler view contain contextual yearns.
                 View contextualYearns = inflater.inflate(R.layout.item_horizontal_yearn_recycler_view, parent, false);
                 viewHolder = new InnerRecyclerViewViewHolder(contextualYearns);
                 break;
@@ -120,8 +119,7 @@ public class QueryRecyclerViewAdapter extends BaseRecyclerViewAdapter {
                 LinearLayoutManager.HORIZONTAL, false);
 
         contextualYearnViewHolder.getRecyclerView().setLayoutManager(layoutManager);
-        mInnerAdapter =
-                new ContextualYearnRecyclerViewAdapter(mContextualYearns);
+        mInnerAdapter = new ContextualYearnRecyclerViewAdapter(mContextualYearns);
         contextualYearnViewHolder.getRecyclerView().setAdapter(mInnerAdapter);
     }
 
@@ -134,7 +132,7 @@ public class QueryRecyclerViewAdapter extends BaseRecyclerViewAdapter {
         yearnViewHolder.getTextView().setText(text);
         yearnViewHolder.setBoundYearn(mGeneralYearns.get(adjustedPosition));
 
-        // TODO: Should potentially use glide here to handle image.
+        // Glide can't handle vector drawables so we have to do this manually.
         yearnViewHolder.getImageView().setImageDrawable(
                 ContextCompat.getDrawable(
                         context, mGeneralYearns.get(adjustedPosition).getDrawable()));
