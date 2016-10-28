@@ -1,11 +1,15 @@
 package com.jamieadkins.yearn.ui.recyclerview;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jamieadkins.yearn.R;
+import com.jamieadkins.yearn.ResultActivity;
 import com.jamieadkins.yearn.Yearn;
 
 /**
@@ -26,24 +30,28 @@ public class YearnViewHolder extends RecyclerView.ViewHolder {
         mTextView = (TextView) view.findViewById(R.id.yearning_name);
     }
 
-    public View getOverallView() {
-        return mView;
-    }
-
-    public ImageView getImageView() {
-        return mImageView;
-    }
-
-    public TextView getTextView() {
-        return mTextView;
-    }
-
-    public Yearn getBoundYearn() {
-        return mBoundYearn;
-    }
-
-    public void setBoundYearn(Yearn yearn) {
+    protected void bindYearn(Yearn yearn) {
         mBoundYearn = yearn;
+
+        Context context = mView.getContext();
+        String text = context.getString(mBoundYearn.getTitleId());
+        mBoundYearn.setQueryKeyword(text);
+        mTextView.setText(text);
+
+        // Glide can't handle vector drawables so we have to do this manually.
+        mImageView.setImageDrawable(ContextCompat.getDrawable(
+                        context, mBoundYearn.getDrawable()));
+
+        mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, ResultActivity.class);
+
+                intent.putExtra(ResultActivity.EXTRA_YEARN, mBoundYearn.getQueryKeyword());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

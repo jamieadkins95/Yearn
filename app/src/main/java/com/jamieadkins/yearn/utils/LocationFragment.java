@@ -2,6 +2,7 @@ package com.jamieadkins.yearn.utils;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.jamieadkins.yearn.R;
 
 /**
  * Background fragment that retrieves location.
@@ -128,7 +130,6 @@ public class LocationFragment extends Fragment implements
             mRunning = false;
         }
 
-
         @Override
         protected void onPostExecute(Location location) {
             super.onPostExecute(location);
@@ -137,6 +138,17 @@ public class LocationFragment extends Fragment implements
 
             if (location != null) {
                 Log.d(TAG, "Location found: " + location.toString());
+
+                SharedPreferences locationStorage = getActivity().getSharedPreferences(
+                        getString(R.string.snapshot_file_key), Context.MODE_PRIVATE);
+                locationStorage.edit()
+                        .putFloat(getString(R.string.snapshot_latitude),
+                                (float) location.getLatitude())
+                        .putFloat(getString(R.string.snapshot_longitude),
+                                (float) location.getLongitude())
+                        .putLong(getString(R.string.snapshot_timestamp),
+                                System.currentTimeMillis())
+                        .apply();
             }
 
             if (mListener != null) {

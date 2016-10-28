@@ -126,31 +126,7 @@ public class QueryRecyclerViewAdapter extends BaseRecyclerViewAdapter {
     private void configureGeneralYearnViewHolder(final YearnViewHolder yearnViewHolder,
                                                  int position) {
         int adjustedPosition = getAdjustedPosition(position);
-        Context context = yearnViewHolder.getOverallView().getContext();
-        String text = context.getString(mGeneralYearns.get(adjustedPosition).getTitleId());
-        mGeneralYearns.get(adjustedPosition).setQueryKeyword(text);
-        yearnViewHolder.getTextView().setText(text);
-        yearnViewHolder.setBoundYearn(mGeneralYearns.get(adjustedPosition));
-
-        // Glide can't handle vector drawables so we have to do this manually.
-        yearnViewHolder.getImageView().setImageDrawable(
-                ContextCompat.getDrawable(
-                        context, mGeneralYearns.get(adjustedPosition).getDrawable()));
-
-        yearnViewHolder.getOverallView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context context = v.getContext();
-                Intent intent = new Intent(context, ResultActivity.class);
-
-                // TODO: Move this to QueryFragment or QueryActivity so that adapter has less control.
-                intent.putExtra(ResultActivity.EXTRA_YEARN,
-                        yearnViewHolder.getBoundYearn().getQueryKeyword());
-                intent.putExtra(ResultActivity.EXTRA_LATITUDE, mLocation.getLatitude());
-                intent.putExtra(ResultActivity.EXTRA_LONGITUDE, mLocation.getLongitude());
-                context.startActivity(intent);
-            }
-        });
+        yearnViewHolder.bindYearn(mGeneralYearns.get(adjustedPosition));
     }
 
     private int getAdjustedPosition(int position) {

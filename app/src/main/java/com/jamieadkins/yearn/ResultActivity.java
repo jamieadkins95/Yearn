@@ -2,7 +2,6 @@ package com.jamieadkins.yearn;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
@@ -14,10 +13,8 @@ import com.google.maps.model.PlacesSearchResult;
 import com.jamieadkins.yearn.secret.ApiKeys;
 import com.jamieadkins.yearn.ui.ResultFragment;
 
-public class ResultActivity extends AppCompatActivity {
+public class ResultActivity extends BaseActivity {
     public static final String EXTRA_YEARN = "com.jamieadkins.yearn.YEARN";
-    public static final String EXTRA_LONGITUDE = "com.jamieadkins.yearn.LONGITUDE";
-    public static final String EXTRA_LATITUDE = "com.jamieadkins.yearn.LATITUDE";
 
     private PlacesQueryResultListener mResultListener;
 
@@ -35,12 +32,10 @@ public class ResultActivity extends AppCompatActivity {
                     .commit();
         }
 
-        String keyword = getIntent().getStringExtra(EXTRA_YEARN);
-        setTitle(keyword);
+        setTitle(getIntent().getStringExtra(EXTRA_YEARN));
+    }
 
-        LatLng location = new LatLng(getIntent().getDoubleExtra(EXTRA_LATITUDE, 0.0),
-                getIntent().getDoubleExtra(EXTRA_LONGITUDE, 0.0));
-
+    private void startNearbyPlacesTask(String keyword, LatLng location) {
         GetNearbyPlacesTask task = new GetNearbyPlacesTask(keyword, location);
         task.execute();
     }
@@ -53,6 +48,11 @@ public class ResultActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         mResultListener = null;
+    }
+
+    @Override
+    protected void onSnapshotReady(YearnSnapshot snapshot) {
+        startNearbyPlacesTask(getIntent().getStringExtra(EXTRA_YEARN), snapshot.getLocation());
     }
 
     private class GetNearbyPlacesTask extends AsyncTask<String, Void, PlacesSearchResult[]> {
