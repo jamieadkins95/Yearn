@@ -1,9 +1,8 @@
 package com.jamieadkins.yearn;
 
 import android.Manifest;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -11,58 +10,43 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.google.maps.model.LatLng;
-import com.jamieadkins.yearn.utils.LocationFragment;
+import com.google.android.gms.awareness.snapshot.LocationResult;
+import com.google.android.gms.awareness.snapshot.WeatherResult;
+import com.google.android.gms.common.api.Result;
+import com.google.android.gms.common.api.ResultCallback;
+import com.jamieadkins.yearn.utils.SnapshotFragment;
 
 public abstract class BaseActivity extends AppCompatActivity
-        implements LocationFragment.LocationFetchListener {
+        implements ResultCallback {
     private final String TAG = getClass().getSimpleName();
-    protected static final String TAG_LOCATION_FRAGMENT = LocationFragment.class.getSimpleName();
+    protected static final String TAG_SNAPSHOT_FRAGMENT = SnapshotFragment.class.getSimpleName();
     protected static final int PERMISSIONS_REQUEST_FINE_LOCATION = 3294;
 
-    protected LocationFragment mLocationFragment;
+    protected SnapshotFragment mSnapshotFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        SharedPreferences sharedPreferences =
-                getSharedPreferences(getString(R.string.snapshot_file_key), MODE_PRIVATE);
-
-        LatLng location = new LatLng(
-                sharedPreferences.getFloat(getString(R.string.snapshot_latitude), 0.0f),
-                sharedPreferences.getFloat(getString(R.string.snapshot_longitude), 0.0f));
-
-        long snapshotTimestamp =
-                sharedPreferences.getLong(getString(R.string.snapshot_timestamp), 0);
-
-        // If no location has been saved or the timestamp is older than 30 seconds ago.
-        // Under the assumption that the user is never at 0,0.
-        if ((location.lat == 0.0f && location.lng == 0.0f) ||
-                snapshotTimestamp < System.currentTimeMillis() - 30000) {
-            initLocationFragment();
-        } else {
-            onSnapshotReady(new YearnSnapshot(location));
-        }
+        initSnapshotFragment();
     }
 
-    private void initLocationFragment() {
+    private void initSnapshotFragment() {
         Log.d(TAG, "Initialising location fragment");
 
         FragmentManager fm = getSupportFragmentManager();
-        mLocationFragment = (LocationFragment) fm.findFragmentByTag(TAG_LOCATION_FRAGMENT);
+        mSnapshotFragment = (SnapshotFragment) fm.findFragmentByTag(TAG_SNAPSHOT_FRAGMENT);
 
         // If we haven't retained the location fragment, then create it.
-        if (mLocationFragment == null) {
-            mLocationFragment = new LocationFragment();
-            fm.beginTransaction().add(mLocationFragment, TAG_LOCATION_FRAGMENT).commit();
+        if (mSnapshotFragment == null) {
+            mSnapshotFragment = new SnapshotFragment();
+            fm.beginTransaction().add(mSnapshotFragment, TAG_SNAPSHOT_FRAGMENT).commit();
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mLocationFragment != null) {
+        if (mSnapshotFragment != null) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
 
@@ -70,7 +54,7 @@ public abstract class BaseActivity extends AppCompatActivity
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         PERMISSIONS_REQUEST_FINE_LOCATION);
             } else {
-                mLocationFragment.start();
+                mSnapshotFragment.start();
             }
         }
     }
@@ -83,7 +67,7 @@ public abstract class BaseActivity extends AppCompatActivity
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mLocationFragment.start();
+                    mSnapshotFragment.start();
                 } else {
                     // Permission denied.
                 }
@@ -95,10 +79,19 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLocationFound(Location location) {
-        onSnapshotReady(
-                new YearnSnapshot(new LatLng(location.getLatitude(), location.getLongitude())));
+    public void onResult(@NonNull Result result) {
+        if (!result.getStatus().isSuccess()) {
+            Log.e(TAG, "Couldn't get snapshot");
+        }
+
+        if (result instanceof LocationResult) {
+            onLocationResult((LocationResult) result);
+        } else if (result instanceof WeatherResult) {
+            onWeatherResult((WeatherResult) result);
+        }
     }
 
-    protected abstract void onSnapshotReady(YearnSnapshot snapshot);
+    protected abstract void onWeatherResult(WeatherResult weatherResult);
+
+    protected abstract void onLocationResult(LocationResult locationResult);
 }

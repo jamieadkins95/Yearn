@@ -1,10 +1,14 @@
 package com.jamieadkins.yearn;
 
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import com.google.android.gms.awareness.snapshot.LocationResult;
+import com.google.android.gms.awareness.snapshot.WeatherResult;
 import com.google.maps.GeoApiContext;
 import com.google.maps.NearbySearchRequest;
 import com.google.maps.PlacesApi;
@@ -14,6 +18,7 @@ import com.jamieadkins.yearn.secret.ApiKeys;
 import com.jamieadkins.yearn.ui.ResultFragment;
 
 public class ResultActivity extends BaseActivity {
+    private final String TAG = getClass().getSimpleName();
     public static final String EXTRA_YEARN = "com.jamieadkins.yearn.YEARN";
 
     private PlacesQueryResultListener mResultListener;
@@ -35,7 +40,7 @@ public class ResultActivity extends BaseActivity {
         setTitle(getIntent().getStringExtra(EXTRA_YEARN));
     }
 
-    private void startNearbyPlacesTask(String keyword, LatLng location) {
+    private void startNearbyPlacesTask(String keyword, Location location) {
         GetNearbyPlacesTask task = new GetNearbyPlacesTask(keyword, location);
         task.execute();
     }
@@ -51,8 +56,14 @@ public class ResultActivity extends BaseActivity {
     }
 
     @Override
-    protected void onSnapshotReady(YearnSnapshot snapshot) {
-        startNearbyPlacesTask(getIntent().getStringExtra(EXTRA_YEARN), snapshot.getLocation());
+    public void onLocationResult(@NonNull LocationResult locationResult) {
+        Log.d(TAG, locationResult.getLocation().toString());
+        startNearbyPlacesTask(getIntent().getStringExtra(EXTRA_YEARN), locationResult.getLocation());
+    }
+
+    @Override
+    protected void onWeatherResult(WeatherResult weatherResult) {
+        // Don't need to do anything here.
     }
 
     private class GetNearbyPlacesTask extends AsyncTask<String, Void, PlacesSearchResult[]> {
@@ -60,9 +71,9 @@ public class ResultActivity extends BaseActivity {
         private String mQueryKeyword;
         private LatLng mLocation;
 
-        private GetNearbyPlacesTask(String keyword, LatLng location) {
+        private GetNearbyPlacesTask(String keyword, Location location) {
             mQueryKeyword = keyword;
-            mLocation = location;
+            mLocation = new LatLng(location.getLatitude(), location.getLongitude());
         }
 
         @Override

@@ -1,39 +1,29 @@
 package com.jamieadkins.yearn.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.jamieadkins.yearn.QueryActivity;
 import com.jamieadkins.yearn.R;
-import com.jamieadkins.yearn.ResultActivity;
 import com.jamieadkins.yearn.Yearn;
 import com.jamieadkins.yearn.ui.recyclerview.BaseRecyclerViewAdapter;
 import com.jamieadkins.yearn.ui.recyclerview.QueryRecyclerViewAdapter;
 import com.jamieadkins.yearn.ui.recyclerview.RecyclerViewHeader;
-import com.jamieadkins.yearn.utils.LocationFragment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class QueryFragment extends Fragment implements LocationFragment.LocationFetchListener {
-    private QueryActivity mActivity;
+public class QueryFragment extends Fragment {
     private BaseRecyclerViewAdapter mYearnAdapter;
 
     @Override
@@ -84,24 +74,6 @@ public class QueryFragment extends Fragment implements LocationFragment.Location
                 somethingElseHeader,
                 contextualYearns, generalYearns);
         recyclerView.setAdapter(mYearnAdapter);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mActivity = (QueryActivity) context;
-        mActivity.registerListener(this);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mActivity = null;
-    }
-
-    @Override
-    public void onLocationFound(Location location) {
-        mYearnAdapter.setLocation(location);
     }
 
     private static String getWeekdayFromCalendar(Context context, int dayOfWeek) {

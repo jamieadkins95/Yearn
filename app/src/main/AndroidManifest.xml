@@ -20,6 +20,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ResultActivity" />
+
+        <meta-data
+            android:name="com.google.android.awareness.API_KEY"
+            android:value="YOUR_API_KEY"/>
     </application>
 
 </manifest>

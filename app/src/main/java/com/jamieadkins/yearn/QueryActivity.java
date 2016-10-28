@@ -2,14 +2,14 @@ package com.jamieadkins.yearn;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
+import com.google.android.gms.awareness.snapshot.LocationResult;
+import com.google.android.gms.awareness.snapshot.WeatherResult;
 import com.jamieadkins.yearn.ui.QueryFragment;
-import com.jamieadkins.yearn.utils.LocationFragment;
 
 public class QueryActivity extends BaseActivity {
     private final String TAG = getClass().getSimpleName();
-
-    private LocationFragment.LocationFetchListener mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,17 +27,13 @@ public class QueryActivity extends BaseActivity {
     }
 
     @Override
-    protected void onSnapshotReady(YearnSnapshot snapshot) {
-        // Update recycler view with context based information.
-    }
-
-    public void registerListener(LocationFragment.LocationFetchListener listener) {
-        mListener = listener;
+    protected void onWeatherResult(WeatherResult weatherResult) {
+        // TODO Add weather context cards to recycler view.
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        mListener = null;
+    protected void onLocationResult(LocationResult locationResult) {
+        Log.d(TAG, locationResult.getLocation().toString());
+        // TODO add bottom sheet to pick location.
     }
 }
