@@ -3,6 +3,7 @@ package com.jamieadkins.yearn.activities;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
@@ -19,7 +20,7 @@ import com.jamieadkins.yearn.Yearn;
 import com.jamieadkins.yearn.secret.ApiKeys;
 import com.jamieadkins.yearn.ui.ResultFragment;
 
-public class ResultActivity extends BaseActivity {
+public class ResultActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
     private final String TAG = getClass().getSimpleName();
     public static final String EXTRA_YEARN = "com.jamieadkins.yearn.YEARN";
     public static final String EXTRA_LATITUDE = "com.jamieadkins.yearn.LATITUDE";
@@ -98,6 +99,11 @@ public class ResultActivity extends BaseActivity {
     @Override
     protected void onWeatherResult(WeatherResult weatherResult) {
         // Don't need to do anything here.
+    }
+
+    @Override
+    public void onRefresh() {
+        startNearbyPlacesTask();
     }
 
     private class GetNearbyPlacesTask extends AsyncTask<String, Void, PlacesSearchResult[]> {

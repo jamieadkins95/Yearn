@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,12 +24,21 @@ import com.jamieadkins.yearn.utils.PhotoUtils;
  */
 public class ResultFragment extends Fragment implements ResultActivity.PlacesQueryResultListener {
 
-    RecyclerView mPlaceResultView;
+    private RecyclerView mPlaceResultView;
+    private SwipeRefreshLayout mRefreshContainer;
+    private SwipeRefreshLayout.OnRefreshListener mRefreshListener;
+
+    private ResultsRecyclerViewAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_result, container, false);
+
+        mRefreshContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.refreshContainer);
+        mRefreshContainer.setOnRefreshListener(mRefreshListener);
+        mRefreshContainer.setColorSchemeResources(R.color.colorAccent);
+        mRefreshContainer.setRefreshing(true);
 
         mPlaceResultView = (RecyclerView) rootView.findViewById(R.id.results);
         setupRecyclerView(mPlaceResultView);
@@ -44,11 +54,19 @@ public class ResultFragment extends Fragment implements ResultActivity.PlacesQue
     public void onAttach(Context context) {
         super.onAttach(context);
         ((ResultActivity) getActivity()).registerListener(this);
+        mRefreshListener = (SwipeRefreshLayout.OnRefreshListener) getActivity();
     }
 
     @Override
     public void onResult(PlacesSearchResult[] result) {
-        mPlaceResultView.setAdapter(new ResultsRecyclerViewAdapter(result));
+        if (mAdapter == null) {
+            mAdapter = new ResultsRecyclerViewAdapter(result);
+            mPlaceResultView.setAdapter(mAdapter);
+        } else {
+            mAdapter.onNewResult(result);
+        }
+
+        mRefreshContainer.setRefreshing(false);
     }
 
     public static class ResultsRecyclerViewAdapter
@@ -120,6 +138,11 @@ public class ResultFragment extends Fragment implements ResultActivity.PlacesQue
         @Override
         public int getItemCount() {
             return mResults.length;
+        }
+
+        public void onNewResult(PlacesSearchResult[] newResult) {
+            mResults = newResult;
+            notifyDataSetChanged();
         }
     }
 }
