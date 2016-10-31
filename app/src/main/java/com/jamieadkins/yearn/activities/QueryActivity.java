@@ -7,11 +7,13 @@ import android.util.Log;
 import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.awareness.snapshot.WeatherResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.maps.model.LatLng;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.ui.QueryFragment;
+import com.jamieadkins.yearn.utils.LocationProvider;
 import com.jamieadkins.yearn.utils.WeatherUtils;
 
-public class QueryActivity extends BaseActivity {
+public class QueryActivity extends BaseActivity implements LocationProvider {
     private final String TAG = getClass().getSimpleName();
     private ResultCallback<WeatherResult> mWeatherListener;
 
@@ -54,5 +56,11 @@ public class QueryActivity extends BaseActivity {
 
     public void registerWeatherListener(ResultCallback<WeatherResult> weatherListener) {
         mWeatherListener = weatherListener;
+    }
+
+    @Override
+    public LatLng getLocationForYearn() {
+        // TODO Implement way for user to pick a location.
+        return null;
     }
 }

@@ -30,7 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity
         initSnapshotFragment();
     }
 
-    private void initSnapshotFragment() {
+    protected void initSnapshotFragment() {
         Log.d(TAG, "Initialising location fragment");
 
         FragmentManager fm = getSupportFragmentManager();

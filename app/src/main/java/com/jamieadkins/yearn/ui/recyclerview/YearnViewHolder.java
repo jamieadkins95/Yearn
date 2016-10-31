@@ -8,9 +8,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.maps.model.LatLng;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.activities.ResultActivity;
 import com.jamieadkins.yearn.Yearn;
+import com.jamieadkins.yearn.utils.LocationProvider;
 
 /**
  * ViewHolder for general yearns
@@ -46,9 +48,17 @@ public class YearnViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
-                Intent intent = new Intent(context, ResultActivity.class);
 
+                // The context will be a instance of QueryActivity so this cast is safe.
+                LocationProvider locationProvider = (LocationProvider) context;
+                LatLng locationForYearn = locationProvider.getLocationForYearn();
+
+                Intent intent = new Intent(context, ResultActivity.class);
                 intent.putExtra(ResultActivity.EXTRA_YEARN, mBoundYearn.getQueryKeyword());
+                if (locationForYearn != null) {
+                    intent.putExtra(ResultActivity.EXTRA_LATITUDE, locationForYearn.lat);
+                    intent.putExtra(ResultActivity.EXTRA_LONGITUDE, locationForYearn.lng);
+                }
                 context.startActivity(intent);
             }
         });

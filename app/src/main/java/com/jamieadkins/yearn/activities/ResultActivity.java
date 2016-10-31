@@ -1,6 +1,5 @@
 package com.jamieadkins.yearn.activities;
 
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +20,13 @@ import com.jamieadkins.yearn.ui.ResultFragment;
 public class ResultActivity extends BaseActivity {
     private final String TAG = getClass().getSimpleName();
     public static final String EXTRA_YEARN = "com.jamieadkins.yearn.YEARN";
+    public static final String EXTRA_LATITUDE = "com.jamieadkins.yearn.LATITUDE";
+    public static final String EXTRA_LONGITUDE = "com.jamieadkins.yearn.LONGITUDE";
+
+    // -30,-30 is somewhere in the Atlantic Ocean.
+    private static final double DEFAULT_LAT_LONG = -30.0;
+
+    private LatLng mLocationForYearn;
 
     private PlacesQueryResultListener mResultListener;
 
@@ -41,7 +47,27 @@ public class ResultActivity extends BaseActivity {
         setTitle(getIntent().getStringExtra(EXTRA_YEARN));
     }
 
-    private void startNearbyPlacesTask(String keyword, Location location) {
+    @Override
+    protected void initSnapshotFragment() {
+        mLocationForYearn = new LatLng(getIntent().getDoubleExtra(EXTRA_LATITUDE, DEFAULT_LAT_LONG),
+                getIntent().getDoubleExtra(EXTRA_LONGITUDE, DEFAULT_LAT_LONG));
+
+        // Assume that the user will never want to yearn at this default location.
+        // Nullify because it is more intuitive to understand when used elsewhere.
+        if (mLocationForYearn.lat == DEFAULT_LAT_LONG
+                && mLocationForYearn.lng == DEFAULT_LAT_LONG) {
+            mLocationForYearn = null;
+        }
+
+        // Only fetch location if we haven't been given a location already.
+        if (mLocationForYearn == null) {
+            super.initSnapshotFragment();
+        } else {
+            startNearbyPlacesTask(getIntent().getStringExtra(EXTRA_YEARN), mLocationForYearn);
+        }
+    }
+
+    private void startNearbyPlacesTask(String keyword, LatLng location) {
         GetNearbyPlacesTask task = new GetNearbyPlacesTask(keyword, location);
         task.execute();
     }
@@ -59,7 +85,9 @@ public class ResultActivity extends BaseActivity {
     @Override
     public void onLocationResult(@NonNull LocationResult locationResult) {
         Log.d(TAG, locationResult.getLocation().toString());
-        startNearbyPlacesTask(getIntent().getStringExtra(EXTRA_YEARN), locationResult.getLocation());
+        mLocationForYearn = new LatLng(locationResult.getLocation().getLatitude(),
+                locationResult.getLocation().getLongitude());
+        startNearbyPlacesTask(getIntent().getStringExtra(EXTRA_YEARN), mLocationForYearn);
     }
 
     @Override
@@ -72,9 +100,9 @@ public class ResultActivity extends BaseActivity {
         private String mQueryKeyword;
         private LatLng mLocation;
 
-        private GetNearbyPlacesTask(String keyword, Location location) {
+        private GetNearbyPlacesTask(String keyword, LatLng location) {
             mQueryKeyword = keyword;
-            mLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            mLocation = location;
         }
 
         @Override
