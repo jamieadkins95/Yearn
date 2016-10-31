@@ -14,7 +14,7 @@ import java.util.List;
  * RecyclerView adapter to show possible yearns in {@link QueryFragment}.
  */
 
-public class ContextualYearnRecyclerViewAdapter extends BaseRecyclerViewAdapter {
+public class ContextualYearnRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Yearn> mContextualYearns;
 
     public ContextualYearnRecyclerViewAdapter(List<Yearn> contextualYearns) {

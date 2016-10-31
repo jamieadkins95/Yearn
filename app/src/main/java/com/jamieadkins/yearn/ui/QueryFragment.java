@@ -3,6 +3,7 @@ package com.jamieadkins.yearn.ui;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,11 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.awareness.snapshot.WeatherResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.jamieadkins.yearn.QueryActivity;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.Yearn;
-import com.jamieadkins.yearn.ui.recyclerview.BaseRecyclerViewAdapter;
 import com.jamieadkins.yearn.ui.recyclerview.QueryRecyclerViewAdapter;
 import com.jamieadkins.yearn.ui.recyclerview.RecyclerViewHeader;
+import com.jamieadkins.yearn.utils.WeatherUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,8 +27,16 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class QueryFragment extends Fragment {
-    private BaseRecyclerViewAdapter mYearnAdapter;
+public class QueryFragment extends Fragment implements ResultCallback<WeatherResult> {
+    private QueryRecyclerViewAdapter mYearnAdapter;
+    private String mCurrentWeekday;
+    private String mCurrentTimeOfDay;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        ((QueryActivity) context).registerWeatherListener(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,10 +54,10 @@ public class QueryFragment extends Fragment {
 
         // Get current day and time for the contextual header.
         Calendar rightNow = Calendar.getInstance();
-        final String weekday = getWeekdayFromCalendar(getActivity(), rightNow.get(Calendar.DAY_OF_WEEK));
-        final String timeOfDay = getTimeFromCalendar(getActivity(), rightNow.get(Calendar.HOUR_OF_DAY));
+        mCurrentWeekday = getWeekdayFromCalendar(getActivity(), rightNow.get(Calendar.DAY_OF_WEEK));
+        mCurrentTimeOfDay = getTimeFromCalendar(getActivity(), rightNow.get(Calendar.HOUR_OF_DAY));
         RecyclerViewHeader contextualHeader = new RecyclerViewHeader(
-                String.format(getString(R.string.day_header), weekday, timeOfDay),
+                String.format(getString(R.string.day_header), mCurrentWeekday, mCurrentTimeOfDay),
                 getString(R.string.im_yearning_for));
 
         // Simple header that says "Something Else"
@@ -108,5 +120,14 @@ public class QueryFragment extends Fragment {
             default:
                 throw new RuntimeException("Time of day not implemented!");
         }
+    }
+
+    @Override
+    public void onResult(@NonNull WeatherResult weatherResult) {
+        mYearnAdapter.updateHeaderWithWeatherStatus(
+                String.format(getString(R.string.day_header_with_weather),
+                        mCurrentWeekday, mCurrentTimeOfDay,
+                        WeatherUtils.getWeatherDescription(getActivity(),
+                                weatherResult.getWeather().getConditions())));
     }
 }

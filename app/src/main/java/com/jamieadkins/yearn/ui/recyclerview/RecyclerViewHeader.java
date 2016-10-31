@@ -20,4 +20,12 @@ public class RecyclerViewHeader {
     public String getSecondaryText() {
         return mSecondaryText;
     }
+
+    /**
+     * Used to update the header with weather details.
+     * @param primaryText new header text.
+     */
+    public void setPrimaryText(String primaryText) {
+        mPrimaryText = primaryText;
+    }
 }

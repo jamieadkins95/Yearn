@@ -6,10 +6,13 @@ import android.util.Log;
 
 import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.awareness.snapshot.WeatherResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.jamieadkins.yearn.ui.QueryFragment;
+import com.jamieadkins.yearn.utils.WeatherUtils;
 
 public class QueryActivity extends BaseActivity {
     private final String TAG = getClass().getSimpleName();
+    private ResultCallback<WeatherResult> mWeatherListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,13 +30,28 @@ public class QueryActivity extends BaseActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        mWeatherListener = null;
+    }
+
+    @Override
     protected void onWeatherResult(WeatherResult weatherResult) {
-        // TODO Add weather context cards to recycler view.
+        Log.d(TAG, "Weather: " + WeatherUtils.getWeatherDescription(this,
+                weatherResult.getWeather().getConditions()));
+
+        if (mWeatherListener != null) {
+            mWeatherListener.onResult(weatherResult);
+        }
     }
 
     @Override
     protected void onLocationResult(LocationResult locationResult) {
         Log.d(TAG, locationResult.getLocation().toString());
         // TODO add bottom sheet to pick location.
+    }
+
+    public void registerWeatherListener(ResultCallback<WeatherResult> weatherListener) {
+        mWeatherListener = weatherListener;
     }
 }

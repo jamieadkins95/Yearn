@@ -1,9 +1,5 @@
 package com.jamieadkins.yearn.ui.recyclerview;
 
-import android.content.Context;
-import android.content.Intent;
-import android.location.Location;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jamieadkins.yearn.R;
-import com.jamieadkins.yearn.ResultActivity;
 import com.jamieadkins.yearn.Yearn;
 import com.jamieadkins.yearn.ui.QueryFragment;
 
@@ -21,7 +16,7 @@ import java.util.List;
  * RecyclerView adapter to show possible yearns in {@link QueryFragment}.
  */
 
-public class QueryRecyclerViewAdapter extends BaseRecyclerViewAdapter {
+public class QueryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int HEADER = 0;
     private static final int CONTEXTUAL_YEARN = 1;
@@ -150,9 +145,8 @@ public class QueryRecyclerViewAdapter extends BaseRecyclerViewAdapter {
         return mGeneralYearns.size() + INDEX_ADJUSTMENT;
     }
 
-    @Override
-    public void setLocation(Location location) {
-        super.setLocation(location);
-        mInnerAdapter.setLocation(location);
+    public void updateHeaderWithWeatherStatus(String updatedHeaderText) {
+        mContextualHeader.setPrimaryText(updatedHeaderText);
+        notifyDataSetChanged();
     }
 }

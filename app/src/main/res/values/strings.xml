@@ -13,6 +13,7 @@
     <string name="yearn_movie">A Good Movie</string>
 
     <string name="day_header">It\'s %1$s %2$s</string>
+    <string name="day_header_with_weather">It\'s a %3$s %1$s %2$s</string>
     <string name="something_else">Something else</string>
 
     <string name="monday">Monday</string>
@@ -43,4 +44,15 @@
     <string name="snapshot_longitude">com.jamieadkins.yearn.LONGITUDE</string>
     <string name="snapshot_latitude">com.jamieadkins.yearn.LATITUDE</string>
     <string name="snapshot_timestamp">com.jamieadkins.yearn.TIMESTAMP</string>
+
+    <string name="clear">clear</string>
+    <string name="cloudy">cloudy</string>
+    <string name="foggy">foggy</string>
+    <string name="hazy">hazy</string>
+    <string name="icy">icy</string>
+    <string name="rainy">rainy</string>
+    <string name="snowy">snowy</string>
+    <string name="stormy">stormy</string>
+    <string name="windy">windy</string>
+
 </resources>
