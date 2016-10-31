@@ -55,4 +55,9 @@
     <string name="stormy">stormy</string>
     <string name="windy">windy</string>
 
+    <string name="permission_location_title">Location Permission</string>
+    <string name="permission_location_message">Yearn requires knowledge of your location to search for nearby places.</string>
+
+    <string name="got_it">Got it!</string>
+
 </resources>

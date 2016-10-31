@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,10 +15,12 @@ import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.awareness.snapshot.WeatherResult;
 import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
+import com.jamieadkins.yearn.ui.PermissionExplanationDialogFragment;
+import com.jamieadkins.yearn.ui.PermissionExplanationDialogFragment.PermissionExplanationListener;
 import com.jamieadkins.yearn.utils.SnapshotFragment;
 
 public abstract class BaseActivity extends AppCompatActivity
-        implements ResultCallback {
+        implements ResultCallback, PermissionExplanationListener {
     private final String TAG = getClass().getSimpleName();
     protected static final String TAG_SNAPSHOT_FRAGMENT = SnapshotFragment.class.getSimpleName();
     protected static final int PERMISSIONS_REQUEST_FINE_LOCATION = 3294;
@@ -44,19 +47,29 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         if (mSnapshotFragment != null) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        PERMISSIONS_REQUEST_FINE_LOCATION);
+                showPermissionExplanationDialog();
             } else {
                 mSnapshotFragment.start();
             }
         }
+    }
+
+    private void showPermissionExplanationDialog() {
+        DialogFragment dialog = new PermissionExplanationDialogFragment();
+        dialog.show(getSupportFragmentManager(),
+                PermissionExplanationDialogFragment.class.getSimpleName());
+    }
+
+    @Override
+    public void onExplanationRead() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                PERMISSIONS_REQUEST_FINE_LOCATION);
     }
 
     @Override
