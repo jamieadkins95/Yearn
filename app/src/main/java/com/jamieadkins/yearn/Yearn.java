@@ -1,6 +1,8 @@
 package com.jamieadkins.yearn;
 
-import com.google.maps.NearbySearchRequest;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.maps.model.PlaceType;
 
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ import java.util.List;
  * Basic model of a yearn.
  */
 
-public class Yearn {
+public class Yearn implements Parcelable {
     private static final int EVENING_END = 4;
     private static final int MORNING_END = 12;
     private static final int AFTERNOON_END = 17;
@@ -51,15 +53,41 @@ public class Yearn {
     private String mQueryKeyword;
     private PlaceType mPlaceType;
 
-    public Yearn(int titleId, int drawable) {
-        mTitleId = titleId;
-        mDrawableId = drawable;
-    }
-
     public Yearn(int titleId, int drawable, PlaceType placeType) {
         mTitleId = titleId;
         mDrawableId = drawable;
         mPlaceType = placeType;
+    }
+
+    private Yearn(Parcel in) {
+        mTitleId = in.readInt();
+        mDrawableId = in.readInt();
+        mQueryKeyword = in.readString();
+        mPlaceType = (PlaceType) in.readSerializable();
+    }
+
+    public static final Parcelable.Creator<Yearn> CREATOR
+            = new Parcelable.Creator<Yearn>() {
+        public Yearn createFromParcel(Parcel in) {
+            return new Yearn(in);
+        }
+
+        public Yearn[] newArray(int size) {
+            return new Yearn[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(mTitleId);
+        parcel.writeInt(mDrawableId);
+        parcel.writeString(mQueryKeyword);
+        parcel.writeSerializable(mPlaceType);
     }
 
     public int getTitleId() {

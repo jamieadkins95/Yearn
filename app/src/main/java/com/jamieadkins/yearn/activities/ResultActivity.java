@@ -15,6 +15,7 @@ import com.google.maps.model.LatLng;
 import com.google.maps.model.PlaceType;
 import com.google.maps.model.PlacesSearchResult;
 import com.jamieadkins.yearn.R;
+import com.jamieadkins.yearn.Yearn;
 import com.jamieadkins.yearn.secret.ApiKeys;
 import com.jamieadkins.yearn.ui.ResultFragment;
 
@@ -29,6 +30,7 @@ public class ResultActivity extends BaseActivity {
     private static final double DEFAULT_LAT_LONG = -30.0;
 
     private LatLng mLocationForYearn;
+    private Yearn mYearn;
 
     private PlacesQueryResultListener mResultListener;
 
@@ -46,7 +48,8 @@ public class ResultActivity extends BaseActivity {
                     .commit();
         }
 
-        setTitle(getIntent().getStringExtra(EXTRA_YEARN));
+        mYearn = getIntent().getParcelableExtra(EXTRA_YEARN);
+        setTitle(mYearn.getQueryKeyword());
     }
 
     @Override
@@ -65,12 +68,12 @@ public class ResultActivity extends BaseActivity {
         if (mLocationForYearn == null) {
             super.initSnapshotFragment();
         } else {
-            startNearbyPlacesTask((PlaceType) getIntent().getSerializableExtra(EXTRA_PLACE_TYPE), mLocationForYearn);
+            startNearbyPlacesTask();
         }
     }
 
-    private void startNearbyPlacesTask(PlaceType placeType, LatLng location) {
-        GetNearbyPlacesTask task = new GetNearbyPlacesTask(placeType, location);
+    private void startNearbyPlacesTask() {
+        GetNearbyPlacesTask task = new GetNearbyPlacesTask(mYearn, mLocationForYearn);
         task.execute();
     }
 
@@ -89,7 +92,7 @@ public class ResultActivity extends BaseActivity {
         Log.d(TAG, locationResult.getLocation().toString());
         mLocationForYearn = new LatLng(locationResult.getLocation().getLatitude(),
                 locationResult.getLocation().getLongitude());
-        startNearbyPlacesTask((PlaceType) getIntent().getSerializableExtra(EXTRA_PLACE_TYPE), mLocationForYearn);
+        startNearbyPlacesTask();
     }
 
     @Override
@@ -99,17 +102,11 @@ public class ResultActivity extends BaseActivity {
 
     private class GetNearbyPlacesTask extends AsyncTask<String, Void, PlacesSearchResult[]> {
         private final String TAG = getClass().getSimpleName();
-        private String mQueryKeyword;
         private LatLng mLocation;
-        private PlaceType mPlaceType;
+        private Yearn mYearn;
 
-        private GetNearbyPlacesTask(String keyword, LatLng location) {
-            mQueryKeyword = keyword;
-            mLocation = location;
-        }
-
-        private GetNearbyPlacesTask(PlaceType placeType, LatLng location) {
-            mPlaceType = placeType;
+        private GetNearbyPlacesTask(Yearn yearn, LatLng location) {
+            mYearn = yearn;
             mLocation = location;
         }
 
@@ -118,7 +115,7 @@ public class ResultActivity extends BaseActivity {
             GeoApiContext context = new GeoApiContext().setApiKey(ApiKeys.GOOGLE_PLACES_API_WEB);
             NearbySearchRequest request = PlacesApi.nearbySearchQuery(context, mLocation)
                     .radius(5000)
-                    .type(mPlaceType);
+                    .type(mYearn.getPlaceType());
 
             try {
                 return request.await().results;
