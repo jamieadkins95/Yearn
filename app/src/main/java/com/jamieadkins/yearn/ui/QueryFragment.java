@@ -70,16 +70,9 @@ public class QueryFragment extends Fragment implements ResultCallback<WeatherRes
 
         // Organise all of the general yearns.
         ArrayList<Yearn> generalYearns = new ArrayList<>();
-
-        TypedArray yearnTypes = getResources().obtainTypedArray(R.array.yearn_types);
-        TypedArray icons = getResources().obtainTypedArray(R.array.yearn_icons);
-        for (int i = 0; i < icons.length(); i++) {
-            generalYearns.add(new Yearn(yearnTypes.getResourceId(i, -1), icons.getResourceId(i, -1)));
+        for (Yearn yearn : Yearn.GENERAL_YEARNS) {
+            generalYearns.add(yearn);
         }
-
-        // Recycle typed array.
-        yearnTypes.recycle();
-        icons.recycle();
 
         // Give it all to the adapter.
         mYearnAdapter = new QueryRecyclerViewAdapter(contextualHeader,

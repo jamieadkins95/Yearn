@@ -55,6 +55,7 @@ public class YearnViewHolder extends RecyclerView.ViewHolder {
 
                 Intent intent = new Intent(context, ResultActivity.class);
                 intent.putExtra(ResultActivity.EXTRA_YEARN, mBoundYearn.getQueryKeyword());
+                intent.putExtra(ResultActivity.EXTRA_PLACE_TYPE, mBoundYearn.getPlaceType());
                 if (locationForYearn != null) {
                     intent.putExtra(ResultActivity.EXTRA_LATITUDE, locationForYearn.lat);
                     intent.putExtra(ResultActivity.EXTRA_LONGITUDE, locationForYearn.lng);

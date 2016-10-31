@@ -1,6 +1,7 @@
 package com.jamieadkins.yearn;
 
 import com.google.maps.NearbySearchRequest;
+import com.google.maps.model.PlaceType;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,18 +16,29 @@ public class Yearn {
     private static final int MORNING_END = 12;
     private static final int AFTERNOON_END = 17;
 
-    private static final Yearn BREAKFAST = new Yearn(R.string.breakfast, R.drawable.ic_local_dining);
-    private static final Yearn COFFEE = new Yearn(R.string.coffee, R.drawable.ic_local_cafe);
-    private static final Yearn LUNCH = new Yearn(R.string.lunch, R.drawable.ic_local_dining);
-    private static final Yearn AFTERNOON_DRINKS = new Yearn(R.string.afternoon_drinks, R.drawable.ic_local_bar);
-    private static final Yearn DINNER = new Yearn(R.string.dinner, R.drawable.ic_local_dining);
-    private static final Yearn TAKEAWAY = new Yearn(R.string.takeaway, R.drawable.ic_local_dining);
-    private static final Yearn BAR = new Yearn(R.string.bar, R.drawable.ic_local_bar);
-    private static final Yearn SPORTS_BAR = new Yearn(R.string.sports_bar, R.drawable.ic_local_bar);
-    private static final Yearn DRINKS_IN_THE_SUN = new Yearn(R.string.afternoon_drinks, R.drawable.ic_local_bar);
-    private static final Yearn NIGHT_CLUB = new Yearn(R.string.night_club, R.drawable.ic_local_bar);
-    private static final Yearn PICNIC = new Yearn(R.string.picnic, R.drawable.ic_local_dining);
-    private static final Yearn MOVIE = new Yearn(R.string.movie, R.drawable.ic_local_movies);
+    private static final Yearn BREAKFAST = new Yearn(R.string.breakfast, R.drawable.ic_local_dining, PlaceType.CAFE);
+    private static final Yearn COFFEE = new Yearn(R.string.coffee, R.drawable.ic_local_cafe, PlaceType.CAFE);
+    private static final Yearn LUNCH = new Yearn(R.string.lunch, R.drawable.ic_local_dining, PlaceType.RESTAURANT);
+    private static final Yearn AFTERNOON_DRINKS = new Yearn(R.string.afternoon_drinks, R.drawable.ic_local_bar, PlaceType.BAR);
+    private static final Yearn DINNER = new Yearn(R.string.dinner, R.drawable.ic_local_dining, PlaceType.RESTAURANT);
+    private static final Yearn TAKEAWAY = new Yearn(R.string.takeaway, R.drawable.ic_local_dining, PlaceType.MEAL_TAKEAWAY);
+    private static final Yearn BAR = new Yearn(R.string.bar, R.drawable.ic_local_bar, PlaceType.BAR);
+    private static final Yearn SPORTS_BAR = new Yearn(R.string.sports_bar, R.drawable.ic_local_bar, PlaceType.BAR);
+    private static final Yearn DRINKS_IN_THE_SUN = new Yearn(R.string.afternoon_drinks, R.drawable.ic_local_bar, PlaceType.BAR);
+    private static final Yearn NIGHT_CLUB = new Yearn(R.string.night_club, R.drawable.ic_local_bar, PlaceType.NIGHT_CLUB);
+    private static final Yearn PICNIC = new Yearn(R.string.picnic, R.drawable.ic_local_dining, PlaceType.PARK);
+    private static final Yearn MOVIE = new Yearn(R.string.movie, R.drawable.ic_local_movies, PlaceType.MOVIE_THEATER);
+
+    public static final Yearn[] GENERAL_YEARNS = new Yearn[] {
+            new Yearn(R.string.yearn_food, R.drawable.ic_local_dining, PlaceType.FOOD),
+            new Yearn(R.string.yearn_drink, R.drawable.ic_local_drink, PlaceType.CAFE),
+            new Yearn(R.string.yearn_coffee, R.drawable.ic_local_cafe, PlaceType.CAFE),
+            new Yearn(R.string.yearn_park, R.drawable.ic_local_florist, PlaceType.PARK),
+            new Yearn(R.string.yearn_atm, R.drawable.ic_local_atm, PlaceType.ATM),
+            new Yearn(R.string.yearn_activity, R.drawable.ic_local_activity, PlaceType.AMUSEMENT_PARK),
+            new Yearn(R.string.yearn_night_out, R.drawable.ic_local_bar, PlaceType.NIGHT_CLUB),
+            new Yearn(R.string.yearn_movie, R.drawable.ic_local_movies, PlaceType.MOVIE_THEATER),
+    };
 
     public enum TimeOfDay {
         MORNING,
@@ -37,10 +49,17 @@ public class Yearn {
     private int mTitleId;
     private int mDrawableId;
     private String mQueryKeyword;
+    private PlaceType mPlaceType;
 
     public Yearn(int titleId, int drawable) {
         mTitleId = titleId;
         mDrawableId = drawable;
+    }
+
+    public Yearn(int titleId, int drawable, PlaceType placeType) {
+        mTitleId = titleId;
+        mDrawableId = drawable;
+        mPlaceType = placeType;
     }
 
     public int getTitleId() {
@@ -49,6 +68,10 @@ public class Yearn {
 
     public int getDrawable() {
         return mDrawableId;
+    }
+
+    public PlaceType getPlaceType() {
+        return mPlaceType;
     }
 
     public String getQueryKeyword() {
