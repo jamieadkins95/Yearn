@@ -1,4 +1,4 @@
-package com.jamieadkins.yearn;
+package com.jamieadkins.yearn.activities;
 
 import android.Manifest;
 import android.content.pm.PackageManager;

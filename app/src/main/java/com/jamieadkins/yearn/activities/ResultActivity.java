@@ -1,4 +1,4 @@
-package com.jamieadkins.yearn;
+package com.jamieadkins.yearn.activities;
 
 import android.location.Location;
 import android.os.AsyncTask;
@@ -14,6 +14,7 @@ import com.google.maps.NearbySearchRequest;
 import com.google.maps.PlacesApi;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.PlacesSearchResult;
+import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.secret.ApiKeys;
 import com.jamieadkins.yearn.ui.ResultFragment;
 

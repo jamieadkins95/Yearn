@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.awareness.snapshot.WeatherResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.jamieadkins.yearn.QueryActivity;
+import com.jamieadkins.yearn.activities.QueryActivity;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.Yearn;
 import com.jamieadkins.yearn.ui.recyclerview.QueryRecyclerViewAdapter;

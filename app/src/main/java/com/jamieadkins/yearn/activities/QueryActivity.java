@@ -1,4 +1,4 @@
-package com.jamieadkins.yearn;
+package com.jamieadkins.yearn.activities;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.awareness.snapshot.WeatherResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.ui.QueryFragment;
 import com.jamieadkins.yearn.utils.WeatherUtils;
 

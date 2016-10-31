@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jamieadkins.yearn.R;
-import com.jamieadkins.yearn.ResultActivity;
+import com.jamieadkins.yearn.activities.ResultActivity;
 import com.jamieadkins.yearn.Yearn;
 
 /**
