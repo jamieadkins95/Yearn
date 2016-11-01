@@ -51,7 +51,7 @@ public class ResultActivity extends BaseActivity implements SwipeRefreshLayout.O
 
         mYearn = getIntent().getParcelableExtra(EXTRA_YEARN);
         setTitle(String.format(getString(R.string.result_title),
-                getString(R.string.app_name), mYearn.getQueryKeyword()));
+                getString(R.string.app_name), mYearn.getTitle(this)));
     }
 
     @Override
@@ -123,6 +123,11 @@ public class ResultActivity extends BaseActivity implements SwipeRefreshLayout.O
             NearbySearchRequest request = PlacesApi.nearbySearchQuery(context, mLocation)
                     .radius(5000)
                     .type(mYearn.getPlaceType());
+
+            final String keyword = mYearn.getQueryKeyword(ResultActivity.this);
+            if (keyword != null) {
+                request.keyword(keyword);
+            }
 
             try {
                 return request.await().results;

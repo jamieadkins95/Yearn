@@ -36,9 +36,7 @@ public class YearnViewHolder extends RecyclerView.ViewHolder {
         mBoundYearn = yearn;
 
         Context context = mView.getContext();
-        String text = context.getString(mBoundYearn.getTitleId());
-        mBoundYearn.setQueryKeyword(text);
-        mTextView.setText(text);
+        mTextView.setText(mBoundYearn.getTitle(context));
 
         // Glide can't handle vector drawables so we have to do this manually.
         mImageView.setImageDrawable(ContextCompat.getDrawable(
