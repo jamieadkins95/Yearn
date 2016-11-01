@@ -48,6 +48,7 @@ dependencies {
 
     // Google Play Services.
     compile 'com.google.android.gms:play-services-awareness:9.8.0'
+    compile 'com.google.android.gms:play-services-places:9.8.0'
 
     // Google Places Web API.
     compile 'com.google.maps:google-maps-services:0.1.15'
