@@ -62,4 +62,6 @@
 
     <string name="got_it">Got it!</string>
 
+    <string name="result_title">%1$s - %2$s</string>
+
 </resources>

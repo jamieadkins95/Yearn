@@ -50,7 +50,8 @@ public class ResultActivity extends BaseActivity implements SwipeRefreshLayout.O
         }
 
         mYearn = getIntent().getParcelableExtra(EXTRA_YEARN);
-        setTitle(mYearn.getQueryKeyword());
+        setTitle(String.format(getString(R.string.result_title),
+                getString(R.string.app_name), mYearn.getQueryKeyword()));
     }
 
     @Override
