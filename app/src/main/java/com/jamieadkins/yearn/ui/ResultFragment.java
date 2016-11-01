@@ -137,7 +137,11 @@ public class ResultFragment extends Fragment implements ResultActivity.PlacesQue
 
         @Override
         public int getItemCount() {
-            return mResults.length;
+            if (mResults == null) {
+                return 0;
+            } else {
+                return mResults.length;
+            }
         }
 
         public void onNewResult(PlacesSearchResult[] newResult) {
