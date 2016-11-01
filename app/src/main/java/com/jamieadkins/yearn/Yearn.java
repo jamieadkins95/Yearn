@@ -187,13 +187,13 @@ public class Yearn implements Parcelable {
     }
 
     public static TimeOfDay getTimeFromHourOfDay(int hourOfDay) {
-        if (hourOfDay > 0 && hourOfDay < EVENING_END) {
+        if (hourOfDay >= 0 && hourOfDay < EVENING_END) {
             return TimeOfDay.EVENING;
         } else if (hourOfDay >= EVENING_END && hourOfDay < MORNING_END) {
             return TimeOfDay.MORNING;
         } else if (hourOfDay >= MORNING_END && hourOfDay < AFTERNOON_END) {
             return TimeOfDay.AFTERNOON;
-        } else if (hourOfDay >= AFTERNOON_END && hourOfDay <= 24) {
+        } else if (hourOfDay >= AFTERNOON_END && hourOfDay < 24) {
             return TimeOfDay.EVENING;
         } else {
             throw new RuntimeException("Received an hour of the day that wasn't between 0 and 24");
