@@ -1,7 +1,7 @@
 package com.jamieadkins.yearn.utils;
 
 import com.google.maps.model.Photo;
-import com.jamieadkins.yearn.secret.ApiKeys;
+import com.jamieadkins.yearn.BuildConfig;
 
 /**
  * Constructs a URL pointing to the photo that Glide can then fetch.
@@ -19,7 +19,7 @@ public class PhotoUtils {
         return "https://maps.googleapis.com/maps/api/place/photo?" +
                 "maxheight=" + MAX_HEIGHT +
                 "&photoreference=" + photoReference +
-                "&key=" + ApiKeys.GOOGLE_PLACES_API_WEB;
+                "&key=" + BuildConfig.GSM_API_KEY_WEB;
     }
 
     /**

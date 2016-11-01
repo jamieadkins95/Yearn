@@ -21,9 +21,21 @@ android {
             minifyEnabled false
             applicationIdSuffix ".debug"
         }
+
+        applicationVariants.all {
+            variant ->
+                variant.buildConfigField "String", "GSM_API_KEY_WEB", "\"" + getApiKey('GSM_API_KEY_WEB') + "\""
+                variant.resValue "string", "GSM_API_KEY_ANDROID", "\"" + getApiKey('GSM_API_KEY_ANDROID') + "\""
+        }
     }
 
     sourceSets.debug.setRoot('src/debug')
+}
+
+def getApiKey(api) {
+    def Properties props = new Properties()
+    props.load(new FileInputStream(new File('secret.properties')))
+    return props[api]
 }
 
 dependencies {

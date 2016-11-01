@@ -15,9 +15,9 @@ import com.google.maps.PlacesApi;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.PlaceType;
 import com.google.maps.model.PlacesSearchResult;
+import com.jamieadkins.yearn.BuildConfig;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.Yearn;
-import com.jamieadkins.yearn.secret.ApiKeys;
 import com.jamieadkins.yearn.ui.ResultFragment;
 
 public class ResultActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
@@ -118,7 +118,7 @@ public class ResultActivity extends BaseActivity implements SwipeRefreshLayout.O
 
         @Override
         protected PlacesSearchResult[] doInBackground(String... strings) {
-            GeoApiContext context = new GeoApiContext().setApiKey(ApiKeys.GOOGLE_PLACES_API_WEB);
+            GeoApiContext context = new GeoApiContext().setApiKey(BuildConfig.GSM_API_KEY_WEB);
             NearbySearchRequest request = PlacesApi.nearbySearchQuery(context, mLocation)
                     .radius(5000)
                     .type(mYearn.getPlaceType());
