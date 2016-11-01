@@ -1,5 +1,6 @@
 package com.jamieadkins.yearn.ui.recyclerview;
 
+import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.Yearn;
 import com.jamieadkins.yearn.ui.QueryFragment;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -30,21 +32,25 @@ public class QueryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     // 2 headers + 1 horizontal yearn list = 3.
     private static final int INDEX_ADJUSTMENT = 3;
 
-    private RecyclerViewHeader mContextualHeader;
-    private RecyclerViewHeader mSomethingElseHeader;
     private List<Yearn> mContextualYearns;
     private List<Yearn> mGeneralYearns;
 
+    private String mCurrentWeekday;
+    private String mCurrentTimeOfDay;
+
+    private String mWeatherDescription;
+
     private ContextualYearnRecyclerViewAdapter mInnerAdapter;
 
-    public QueryRecyclerViewAdapter(RecyclerViewHeader contextualHeader,
-                                    RecyclerViewHeader somethingElseHeader,
-                                    List<Yearn> contextualYearns,
+    public QueryRecyclerViewAdapter(List<Yearn> contextualYearns,
                                     List<Yearn> generalYearns) {
-        mContextualHeader = contextualHeader;
-        mSomethingElseHeader = somethingElseHeader;
         mContextualYearns = contextualYearns;
         mGeneralYearns = generalYearns;
+    }
+
+    public void setCurrentTime(String currentWeekday, String currentTimeOfDay) {
+        mCurrentWeekday = currentWeekday;
+        mCurrentTimeOfDay = currentTimeOfDay;
     }
 
     @Override
@@ -129,12 +135,22 @@ public class QueryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     private void configureHeaderViewHolder(HeaderViewHolder headerViewHolder, int position) {
+        Context context = headerViewHolder.getPrimaryText().getContext();
+
         if (position == CONTEXTUAL_HEADER_POSITION) {
-            headerViewHolder.getPrimaryText().setText(mContextualHeader.getPrimaryText());
-            headerViewHolder.getSecondaryText().setText(mContextualHeader.getSecondaryText());
+            String dayHeader;
+            if (mWeatherDescription != null) {
+                dayHeader = String.format(context.getString(R.string.day_header_with_weather),
+                        mCurrentWeekday, mCurrentTimeOfDay, mWeatherDescription);
+            } else {
+                dayHeader = String.format(context.getString(R.string.day_header),
+                        mCurrentWeekday, mCurrentTimeOfDay);
+            }
+            headerViewHolder.getPrimaryText().setText(dayHeader);
+            headerViewHolder.getSecondaryText().setText(context.getString(R.string.im_yearning_for));
         } else if (position == SOMETHING_ELSE_HEADER_POSITION) {
-            headerViewHolder.getPrimaryText().setText(mSomethingElseHeader.getPrimaryText());
-            headerViewHolder.getSecondaryText().setText(mSomethingElseHeader.getSecondaryText());
+            headerViewHolder.getPrimaryText().setText(context.getString(R.string.something_else));
+            headerViewHolder.getSecondaryText().setText("");
         } else {
             throw new RuntimeException("HeaderViewHolder not implemented!");
         }
@@ -145,8 +161,8 @@ public class QueryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         return mGeneralYearns.size() + INDEX_ADJUSTMENT;
     }
 
-    public void updateHeaderWithWeatherStatus(String updatedHeaderText) {
-        mContextualHeader.setPrimaryText(updatedHeaderText);
+    public void updateWithWeatherStatus(String weatherDescription) {
+        mWeatherDescription = weatherDescription;
         notifyDataSetChanged();
     }
 }

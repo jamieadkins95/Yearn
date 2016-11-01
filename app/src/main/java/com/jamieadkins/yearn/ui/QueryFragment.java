@@ -1,7 +1,6 @@
 package com.jamieadkins.yearn.ui;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -17,7 +16,6 @@ import com.jamieadkins.yearn.activities.QueryActivity;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.Yearn;
 import com.jamieadkins.yearn.ui.recyclerview.QueryRecyclerViewAdapter;
-import com.jamieadkins.yearn.ui.recyclerview.RecyclerViewHeader;
 import com.jamieadkins.yearn.utils.WeatherUtils;
 
 import java.util.ArrayList;
@@ -29,8 +27,6 @@ import java.util.List;
  */
 public class QueryFragment extends Fragment implements ResultCallback<WeatherResult> {
     private QueryRecyclerViewAdapter mYearnAdapter;
-    private String mCurrentWeekday;
-    private String mCurrentTimeOfDay;
 
     @Override
     public void onAttach(Context context) {
@@ -54,15 +50,6 @@ public class QueryFragment extends Fragment implements ResultCallback<WeatherRes
 
         // Get current day and time for the contextual header.
         Calendar rightNow = Calendar.getInstance();
-        mCurrentWeekday = getWeekdayFromCalendar(getActivity(), rightNow.get(Calendar.DAY_OF_WEEK));
-        mCurrentTimeOfDay = getTimeFromCalendar(getActivity(), rightNow.get(Calendar.HOUR_OF_DAY));
-        RecyclerViewHeader contextualHeader = new RecyclerViewHeader(
-                String.format(getString(R.string.day_header), mCurrentWeekday, mCurrentTimeOfDay),
-                getString(R.string.im_yearning_for));
-
-        // Simple header that says "Something Else"
-        RecyclerViewHeader somethingElseHeader = new RecyclerViewHeader(
-                getString(R.string.something_else), "");
 
         // Get the context specific yearns.
         List<Yearn> contextualYearns = Yearn.getContextualYearns(rightNow.get(Calendar.DAY_OF_WEEK),
@@ -75,9 +62,10 @@ public class QueryFragment extends Fragment implements ResultCallback<WeatherRes
         }
 
         // Give it all to the adapter.
-        mYearnAdapter = new QueryRecyclerViewAdapter(contextualHeader,
-                somethingElseHeader,
-                contextualYearns, generalYearns);
+        mYearnAdapter = new QueryRecyclerViewAdapter(contextualYearns, generalYearns);
+        mYearnAdapter.setCurrentTime(
+                getWeekdayFromCalendar(getActivity(), rightNow.get(Calendar.DAY_OF_WEEK)),
+                getTimeFromCalendar(getActivity(), rightNow.get(Calendar.HOUR_OF_DAY)));
         recyclerView.setAdapter(mYearnAdapter);
     }
 
@@ -117,10 +105,8 @@ public class QueryFragment extends Fragment implements ResultCallback<WeatherRes
 
     @Override
     public void onResult(@NonNull WeatherResult weatherResult) {
-        mYearnAdapter.updateHeaderWithWeatherStatus(
-                String.format(getString(R.string.day_header_with_weather),
-                        mCurrentWeekday, mCurrentTimeOfDay,
-                        WeatherUtils.getWeatherDescription(getActivity(),
-                                weatherResult.getWeather().getConditions())));
+        mYearnAdapter.updateWithWeatherStatus(
+                WeatherUtils.getWeatherDescription(getActivity(),
+                        weatherResult.getWeather().getConditions()));
     }
 }
