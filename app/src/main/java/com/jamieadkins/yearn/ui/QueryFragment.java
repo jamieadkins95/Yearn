@@ -105,8 +105,6 @@ public class QueryFragment extends Fragment implements ResultCallback<WeatherRes
 
     @Override
     public void onResult(@NonNull WeatherResult weatherResult) {
-        mYearnAdapter.updateWithWeatherStatus(
-                WeatherUtils.getWeatherDescription(getActivity(),
-                        weatherResult.getWeather().getConditions()));
+        mYearnAdapter.onWeatherResult(getActivity(), weatherResult);
     }
 }

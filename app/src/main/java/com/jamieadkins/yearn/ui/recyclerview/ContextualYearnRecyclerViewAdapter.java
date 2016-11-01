@@ -37,4 +37,9 @@ public class ContextualYearnRecyclerViewAdapter extends RecyclerView.Adapter<Rec
     public int getItemCount() {
         return mContextualYearns.size();
     }
+
+    protected void addYearns(List<Yearn> newYearns) {
+        mContextualYearns.addAll(newYearns);
+        notifyDataSetChanged();
+    }
 }

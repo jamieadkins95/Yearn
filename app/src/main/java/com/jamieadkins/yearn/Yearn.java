@@ -3,6 +3,7 @@ package com.jamieadkins.yearn;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.awareness.state.Weather;
 import com.google.maps.model.PlaceType;
 
 import java.util.ArrayList;
@@ -30,6 +31,9 @@ public class Yearn implements Parcelable {
     private static final Yearn NIGHT_CLUB = new Yearn(R.string.night_club, R.drawable.ic_local_bar, PlaceType.NIGHT_CLUB);
     private static final Yearn PICNIC = new Yearn(R.string.picnic, R.drawable.ic_local_dining, PlaceType.PARK);
     private static final Yearn MOVIE = new Yearn(R.string.movie, R.drawable.ic_local_movies, PlaceType.MOVIE_THEATER);
+
+    private static final Yearn SNOW = new Yearn(R.string.yearn_snow, R.drawable.ic_local_florist, PlaceType.PARK);
+    private static final Yearn STAYING_INSIDE = new Yearn(R.string.staying_indoors, R.drawable.ic_hotel, PlaceType.MEAL_TAKEAWAY);
 
     public static final Yearn[] GENERAL_YEARNS = new Yearn[] {
             new Yearn(R.string.yearn_food, R.drawable.ic_local_dining, PlaceType.FOOD),
@@ -180,6 +184,26 @@ public class Yearn implements Parcelable {
                         contextualYearns.add(MOVIE);
                         break;
                 }
+                break;
+        }
+
+        return contextualYearns;
+    }
+
+    public static List<Yearn> getContextualYearns(int weather, float temperature) {
+        ArrayList<Yearn> contextualYearns = new ArrayList<>();
+        switch (weather) {
+            case Weather.CONDITION_CLEAR:
+                contextualYearns.add(DRINKS_IN_THE_SUN);
+                break;
+            case Weather.CONDITION_SNOWY:
+                contextualYearns.add(SNOW);
+                // Deliberate fall through to get the staying inside yearn.
+            case Weather.CONDITION_ICY:
+            case Weather.CONDITION_STORMY:
+            case Weather.CONDITION_RAINY:
+            case Weather.CONDITION_WINDY:
+                contextualYearns.add(STAYING_INSIDE);
                 break;
         }
 

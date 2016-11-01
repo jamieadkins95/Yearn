@@ -7,9 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.awareness.snapshot.WeatherResult;
+import com.google.android.gms.awareness.state.Weather;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.Yearn;
 import com.jamieadkins.yearn.ui.QueryFragment;
+import com.jamieadkins.yearn.utils.WeatherUtils;
 
 import java.util.Calendar;
 import java.util.List;
@@ -161,8 +164,13 @@ public class QueryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         return mGeneralYearns.size() + INDEX_ADJUSTMENT;
     }
 
-    public void updateWithWeatherStatus(String weatherDescription) {
-        mWeatherDescription = weatherDescription;
+    public void onWeatherResult(Context context, WeatherResult weatherResult) {
+        mWeatherDescription = WeatherUtils.getWeatherDescription(context,
+                weatherResult.getWeather().getConditions());
+        for (int weatherCondition : weatherResult.getWeather().getConditions()) {
+            mInnerAdapter.addYearns(Yearn.getContextualYearns(weatherCondition,
+                    weatherResult.getWeather().getTemperature(Weather.CELSIUS)));
+        }
         notifyDataSetChanged();
     }
 }

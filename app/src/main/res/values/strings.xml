@@ -39,6 +39,8 @@
     <string name="night_club">Night Club</string>
     <string name="picnic">Picnic</string>
     <string name="movie">Movie</string>
+    <string name="staying_indoors">Staying in the warm</string>
+    <string name="yearn_snow">Somewhere to build a snowman</string>
 
     <string name="snapshot_file_key">com.jamieadkins.yearn.SNAPSHOT_FILE_KEY</string>
     <string name="snapshot_longitude">com.jamieadkins.yearn.LONGITUDE</string>
