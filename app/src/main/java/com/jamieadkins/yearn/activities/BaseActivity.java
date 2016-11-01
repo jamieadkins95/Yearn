@@ -9,14 +9,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.awareness.snapshot.WeatherResult;
 import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
-import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.ui.PermissionExplanationDialogFragment;
 import com.jamieadkins.yearn.ui.PermissionExplanationDialogFragment.PermissionExplanationListener;
 import com.jamieadkins.yearn.utils.SnapshotFragment;
@@ -32,10 +30,6 @@ public abstract class BaseActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         initSnapshotFragment();
     }
 
