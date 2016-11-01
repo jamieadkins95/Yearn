@@ -7,6 +7,6 @@
     <dimen name="yearning_header_margin_left">24dp</dimen>
     <dimen name="yearning_header_margin_top">24dp</dimen>
 
-    <dimen name="item_contextual_yearn_width">150dp</dimen>
-    <dimen name="item_contextual_yearn_height">125dp</dimen>
+    <dimen name="item_contextual_yearn_width">135dp</dimen>
+    <dimen name="item_contextual_yearn_height">135dp</dimen>
 </resources>
