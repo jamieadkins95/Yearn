@@ -43,6 +43,8 @@ public class ResultActivity extends BaseActivity implements SwipeRefreshLayout.O
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, new ResultFragment())
@@ -50,8 +52,7 @@ public class ResultActivity extends BaseActivity implements SwipeRefreshLayout.O
         }
 
         mYearn = getIntent().getParcelableExtra(EXTRA_YEARN);
-        setTitle(String.format(getString(R.string.result_title),
-                getString(R.string.app_name), mYearn.getTitle(this)));
+        setTitle(mYearn.getTitle(this));
     }
 
     @Override

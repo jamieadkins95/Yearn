@@ -19,7 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ResultActivity" />
+        <activity
+            android:name=".activities.ResultActivity"
+            android:parentActivityName="com.jamieadkins.yearn.activities.QueryActivity" />
 
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
