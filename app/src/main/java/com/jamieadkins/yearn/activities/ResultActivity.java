@@ -15,6 +15,7 @@ import com.google.maps.PlacesApi;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.PlaceType;
 import com.google.maps.model.PlacesSearchResult;
+import com.google.maps.model.RankBy;
 import com.jamieadkins.yearn.BuildConfig;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.Yearn;
@@ -123,7 +124,8 @@ public class ResultActivity extends BaseActivity implements SwipeRefreshLayout.O
             GeoApiContext context = new GeoApiContext().setApiKey(BuildConfig.GSM_API_KEY_WEB);
             NearbySearchRequest request = PlacesApi.nearbySearchQuery(context, mLocation)
                     .radius(5000)
-                    .type(mYearn.getPlaceType());
+                    .type(mYearn.getPlaceType())
+                    .openNow(true);
 
             final String keyword = mYearn.getQueryKeyword(ResultActivity.this);
             if (keyword != null) {
