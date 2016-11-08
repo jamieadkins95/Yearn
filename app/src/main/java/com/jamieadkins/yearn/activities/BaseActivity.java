@@ -95,6 +95,7 @@ public abstract class BaseActivity extends AppCompatActivity
     public void onResult(@NonNull Result result) {
         if (!result.getStatus().isSuccess()) {
             Log.e(TAG, "Couldn't get snapshot");
+            return;
         }
 
         if (result instanceof LocationResult) {
