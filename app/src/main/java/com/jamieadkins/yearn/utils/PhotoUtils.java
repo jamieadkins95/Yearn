@@ -48,13 +48,23 @@ public class PhotoUtils {
      * @return photo reference of the best photo
      */
     private static String decideBestPhoto(Photo[] photos) {
-        for (Photo photo : photos) {
-            double aspectRatio = (double) photo.width / (double) photo.height;
-            if (aspectRatio < 2.5 && aspectRatio > 1) {
-                return photo.photoReference;
+
+        String bestPhoto = null;
+
+        if (photos.length > 0) {
+            // Use the first photo if we don't find a best photo.
+            bestPhoto = photos[0].photoReference;
+
+            for (Photo photo : photos) {
+                double aspectRatio = (double) photo.width / (double) photo.height;
+                if (aspectRatio < 2.5 && aspectRatio > 1) {
+                    bestPhoto = photo.photoReference;
+                    // We want to return the first best photo we find.
+                    break;
+                }
             }
         }
 
-        return null;
+        return bestPhoto;
     }
 }
