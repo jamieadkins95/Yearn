@@ -67,6 +67,9 @@ public class ResultFragment extends Fragment implements ResultActivity.PlacesQue
         }
 
         mRefreshContainer.setRefreshing(false);
+
+        // Disable refresh so that users can't refresh the same search.
+        mRefreshContainer.setEnabled(false);
     }
 
     public static class ResultsRecyclerViewAdapter
