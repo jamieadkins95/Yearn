@@ -19,17 +19,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.ResultActivity"
-            android:parentActivityName="com.jamieadkins.yearn.activities.QueryActivity" />
+            android:parentActivityName=".activities.QueryActivity" />
+
+        <activity
+            android:name=".activities.DetailActivity"
+            android:parentActivityName=".activities.ResultActivity" />
 
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="@string/GSM_API_KEY_ANDROID"/>
-
+            android:value="@string/GSM_API_KEY_ANDROID" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/GSM_API_KEY_ANDROID"/>
+            android:value="@string/GSM_API_KEY_ANDROID" />
     </application>
 
 </manifest>

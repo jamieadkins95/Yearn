@@ -3,21 +3,17 @@ package com.jamieadkins.yearn.ui;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.maps.model.PlacesSearchResult;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.activities.ResultActivity;
-import com.jamieadkins.yearn.utils.PhotoUtils;
+import com.jamieadkins.yearn.ui.recyclerview.ResultViewHolder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,29 +69,9 @@ public class ResultFragment extends Fragment implements ResultActivity.PlacesQue
     }
 
     public static class ResultsRecyclerViewAdapter
-            extends RecyclerView.Adapter<ResultsRecyclerViewAdapter.ViewHolder> {
+            extends RecyclerView.Adapter<ResultViewHolder> {
 
-        PlacesSearchResult[] mResults;
-
-        public static class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final ImageView mPlaceImage;
-            public final TextView mPlaceName;
-            public final TextView mPlaceUri;
-
-            public ViewHolder(View view) {
-                super(view);
-                mView = view;
-                mPlaceImage = (ImageView) view.findViewById(R.id.placeImage);
-                mPlaceName = (TextView) view.findViewById(R.id.placeName);
-                mPlaceUri = (TextView) view.findViewById(R.id.placeUri);
-            }
-
-            @Override
-            public String toString() {
-                return super.toString() + " '" + mPlaceName.getText();
-            }
-        }
+        private PlacesSearchResult[] mResults;
 
         public PlacesSearchResult getValueAt(int position) {
             return mResults[position];
@@ -106,36 +82,15 @@ public class ResultFragment extends Fragment implements ResultActivity.PlacesQue
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ResultViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_place_result, parent, false);
-            return new ViewHolder(view);
+            return new ResultViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mPlaceName.setText(mResults[position].name);
-            holder.mPlaceUri.setText(mResults[position].vicinity);
-
-            // Reset the drawable so that images for other places are not recycled and used.
-            holder.mPlaceImage.setImageDrawable(
-                    ContextCompat.getDrawable(holder.mPlaceImage.getContext(), R.drawable.yearn));
-
-            if (mResults[position].photos != null) {
-                if (mResults[position].photos.length == 0) {
-                    return;
-                }
-
-                String url = PhotoUtils.getBestPhoto(mResults[position].photos);
-
-                if (url != null) {
-                    Glide.with(holder.mPlaceImage.getContext())
-                            .load(url)
-                            .fitCenter()
-                            .placeholder(R.drawable.yearn)
-                            .into(holder.mPlaceImage);
-                }
-            }
+        public void onBindViewHolder(final ResultViewHolder holder, int position) {
+            holder.bindPlace(mResults[position]);
         }
 
         @Override

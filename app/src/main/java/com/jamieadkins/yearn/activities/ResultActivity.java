@@ -27,6 +27,8 @@ public class ResultActivity extends BaseActivity implements SwipeRefreshLayout.O
     public static final String EXTRA_LATITUDE = "com.jamieadkins.yearn.LATITUDE";
     public static final String EXTRA_LONGITUDE = "com.jamieadkins.yearn.LONGITUDE";
     public static final String EXTRA_PLACE_TYPE = "com.jamieadkins.yearn.PLACE_TYPE";
+    public static final String EXTRA_PLACE_ID = "com.jamieadkins.yearn.PLACE_ID";
+    public static final String EXTRA_PHOTO_URL = "com.jamieadkins.yearn.PHOTO_URL";
 
     // -30,-30 is somewhere in the Atlantic Ocean.
     private static final double DEFAULT_LAT_LONG = -30.0;
