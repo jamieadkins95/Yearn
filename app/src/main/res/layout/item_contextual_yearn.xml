@@ -18,10 +18,10 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_contextual_yearn_height"
-                android:background="@color/colorAccent"
+                android:background="@color/grey_background"
                 android:src="@drawable/ic_local_dining"
                 android:scaleType="center"
-                android:tint="@color/colorPrimary"
+                android:tint="@color/colorAccent"
                 android:id="@+id/yearning_icon"/>
 
             <RelativeLayout
