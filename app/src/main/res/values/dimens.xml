@@ -9,4 +9,5 @@
 
     <dimen name="item_contextual_yearn_width">135dp</dimen>
     <dimen name="item_contextual_yearn_height">135dp</dimen>
+    <dimen name="card_margin">16dp</dimen>
 </resources>

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.location.places.Place;
 import com.jamieadkins.yearn.R;
+import com.jamieadkins.yearn.ui.DetailFragment;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -24,6 +25,12 @@ public class DetailActivity extends AppCompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, new DetailFragment())
+                    .commit();
+        }
 
         loadBackdrop();
     }
