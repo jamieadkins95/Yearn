@@ -1,13 +1,17 @@
 package com.jamieadkins.yearn.activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -53,6 +57,17 @@ public class DetailActivity extends AppCompatActivity implements
                     .addApi(Places.GEO_DATA_API)
                     .build();
         }
+
+        FloatingActionButton mapsButton = (FloatingActionButton) findViewById(R.id.btnMaps);
+        mapsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + mPlace.getName() + " " + mPlace.getAddress());
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
     }
 
     @Override
@@ -68,7 +83,7 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     private void onPlaceFound(Place place) {
-        mPlace = place;
+        mPlace = place.freeze();
         Log.i(TAG, "Place found: " + mPlace.getName());
 
         CollapsingToolbarLayout collapsingToolbar =

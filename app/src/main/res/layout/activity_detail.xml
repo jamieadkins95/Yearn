@@ -63,6 +63,7 @@
         android:src="@drawable/ic_google_maps"
         android:tint="@color/button_tint"
         android:layout_margin="16dp"
-        android:clickable="true"/>
+        android:clickable="true"
+        android:id="@+id/btnMaps"/>
 
 </android.support.design.widget.CoordinatorLayout>
