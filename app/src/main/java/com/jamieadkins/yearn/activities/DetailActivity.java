@@ -1,21 +1,31 @@
 package com.jamieadkins.yearn.activities;
 
-import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.ui.DetailFragment;
 
-public class DetailActivity extends AppCompatActivity {
-
-    Place mPlace;
+public class DetailActivity extends AppCompatActivity implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    private final String TAG = getClass().getSimpleName();
+    private GoogleApiClient mGoogleApiClient;
+    private String mPlaceId;
+    private Place mPlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +43,37 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         loadBackdrop();
+
+        mPlaceId = getIntent().getStringExtra(ResultActivity.EXTRA_PLACE_ID);
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(DetailActivity.this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(Places.GEO_DATA_API)
+                    .build();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+    private void onPlaceFound(Place place) {
+        mPlace = place;
+        Log.i(TAG, "Place found: " + mPlace.getName());
+
+        CollapsingToolbarLayout collapsingToolbar =
+                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setTitle(place.getName());
     }
 
     @Override
@@ -58,20 +99,31 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    private class GetPlaceTask extends AsyncTask<String, Void, Place> {
-
-        @Override
-        protected Place doInBackground(String... strings) {
-            return null;
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (mPlace == null) {
+            Places.GeoDataApi.getPlaceById(mGoogleApiClient, mPlaceId)
+                    .setResultCallback(new ResultCallback<PlaceBuffer>() {
+                        @Override
+                        public void onResult(PlaceBuffer places) {
+                            if (places.getStatus().isSuccess() && places.getCount() > 0) {
+                                onPlaceFound(places.get(0));
+                            } else {
+                                Log.e(TAG, "Place not found");
+                            }
+                            places.release();
+                        }
+                    });
         }
+    }
 
-        @Override
-        protected void onPostExecute(Place place) {
-            super.onPostExecute(place);
+    @Override
+    public void onConnectionSuspended(int i) {
+        // Don't need to do anything.
+    }
 
-            CollapsingToolbarLayout collapsingToolbar =
-                    (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-            collapsingToolbar.setTitle(place.getName());
-        }
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.e(TAG, "Connection to Google Play services failed.");
     }
 }
