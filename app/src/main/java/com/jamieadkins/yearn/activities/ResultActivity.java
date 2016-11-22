@@ -125,7 +125,7 @@ public class ResultActivity extends BaseActivity implements SwipeRefreshLayout.O
         protected PlacesSearchResult[] doInBackground(String... strings) {
             GeoApiContext context = new GeoApiContext().setApiKey(BuildConfig.GSM_API_KEY_WEB);
             NearbySearchRequest request = PlacesApi.nearbySearchQuery(context, mLocation)
-                    .radius(5000)
+                    .rankby(RankBy.DISTANCE)
                     .type(mYearn.getPlaceType())
                     .openNow(true);
 
