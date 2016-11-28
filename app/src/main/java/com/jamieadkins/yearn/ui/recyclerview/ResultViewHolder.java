@@ -65,7 +65,8 @@ public class ResultViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
-                Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + mBoundPlace.name + " " + mBoundPlace.vicinity);
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q=" +
+                        Uri.encode(mBoundPlace.name + " " + mBoundPlace.vicinity));
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 context.startActivity(mapIntent);
