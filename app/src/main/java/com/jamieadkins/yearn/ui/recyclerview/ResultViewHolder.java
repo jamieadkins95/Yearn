@@ -2,6 +2,7 @@ package com.jamieadkins.yearn.ui.recyclerview;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -9,13 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.maps.model.LatLng;
 import com.google.maps.model.PlacesSearchResult;
 import com.jamieadkins.yearn.R;
-import com.jamieadkins.yearn.Yearn;
-import com.jamieadkins.yearn.activities.DetailActivity;
-import com.jamieadkins.yearn.activities.ResultActivity;
-import com.jamieadkins.yearn.utils.LocationProvider;
 import com.jamieadkins.yearn.utils.PhotoUtils;
 
 /**
@@ -69,10 +65,10 @@ public class ResultViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
-                Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra(ResultActivity.EXTRA_PLACE_ID, mBoundPlace.placeId);
-                intent.putExtra(ResultActivity.EXTRA_PHOTO_URL, mPhotoUrl);
-                context.startActivity(intent);
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + mBoundPlace.name + " " + mBoundPlace.vicinity);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                context.startActivity(mapIntent);
             }
         });
     }
