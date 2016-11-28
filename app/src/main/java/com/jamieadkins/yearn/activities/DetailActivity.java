@@ -1,35 +1,36 @@
 package com.jamieadkins.yearn.activities;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.Places;
 import com.jamieadkins.yearn.R;
 import com.jamieadkins.yearn.ui.DetailFragment;
+import com.jamieadkins.yearn.utils.OnPlaceFoundListener;
+import com.jamieadkins.yearn.utils.PlaceFragment;
+import com.jamieadkins.yearn.utils.PlaceProvider;
+import com.jamieadkins.yearn.utils.SnapshotFragment;
 
-public class DetailActivity extends AppCompatActivity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class DetailActivity extends AppCompatActivity
+        implements OnPlaceFoundListener, PlaceProvider {
     private final String TAG = getClass().getSimpleName();
-    private GoogleApiClient mGoogleApiClient;
+    protected static final String TAG_PLACE_FRAGMENT = SnapshotFragment.class.getSimpleName();
     private String mPlaceId;
     private Place mPlace;
+
+    private PlaceFragment mPlaceFragment;
+    private OnPlaceFoundListener mUiListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +41,9 @@ public class DetailActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
+            fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, new DetailFragment())
                     .commit();
         }
@@ -50,12 +52,15 @@ public class DetailActivity extends AppCompatActivity implements
 
         mPlaceId = getIntent().getStringExtra(ResultActivity.EXTRA_PLACE_ID);
 
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(DetailActivity.this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(Places.GEO_DATA_API)
-                    .build();
+        mPlaceFragment = (PlaceFragment) fragmentManager.findFragmentByTag(TAG_PLACE_FRAGMENT);
+
+        // If we haven't retained the place fragment, then create it.
+        if (mPlaceFragment == null) {
+            mPlaceFragment = PlaceFragment.newInstance(mPlaceId);
+            mPlaceFragment.setOnPlaceFoundListener(this);
+            fragmentManager.beginTransaction()
+                    .add(mPlaceFragment, TAG_PLACE_FRAGMENT)
+                    .commit();
         }
 
         FloatingActionButton mapsButton = (FloatingActionButton) findViewById(R.id.btnMaps);
@@ -72,23 +77,14 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     protected void onStart() {
-        mGoogleApiClient.connect();
         super.onStart();
+        mPlaceFragment.start();
     }
 
     @Override
     protected void onStop() {
-        mGoogleApiClient.disconnect();
         super.onStop();
-    }
-
-    private void onPlaceFound(Place place) {
-        mPlace = place.freeze();
-        Log.i(TAG, "Place found: " + mPlace.getName());
-
-        CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(place.getName());
+        mUiListener = null;
     }
 
     @Override
@@ -115,30 +111,23 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        if (mPlace == null) {
-            Places.GeoDataApi.getPlaceById(mGoogleApiClient, mPlaceId)
-                    .setResultCallback(new ResultCallback<PlaceBuffer>() {
-                        @Override
-                        public void onResult(PlaceBuffer places) {
-                            if (places.getStatus().isSuccess() && places.getCount() > 0) {
-                                onPlaceFound(places.get(0));
-                            } else {
-                                Log.e(TAG, "Place not found");
-                            }
-                            places.release();
-                        }
-                    });
+    public void onPlaceFound(Place place) {
+        mPlace = place;
+        CollapsingToolbarLayout collapsingToolbar =
+                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setTitle(place.getName());
+
+        if (mUiListener != null) {
+            mUiListener.onPlaceFound(place);
         }
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-        // Don't need to do anything.
-    }
+    public void setOnPlaceFoundListener(OnPlaceFoundListener onPlaceFoundListener) {
+        mUiListener = onPlaceFoundListener;
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.e(TAG, "Connection to Google Play services failed.");
+        if (mPlace != null) {
+            mUiListener.onPlaceFound(mPlace);
+        }
     }
 }

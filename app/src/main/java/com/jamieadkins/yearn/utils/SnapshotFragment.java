@@ -15,27 +15,15 @@ import com.google.android.gms.common.api.ResultCallback;
 /**
  * Background fragment that retrieves location.
  */
-public class SnapshotFragment extends Fragment implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class SnapshotFragment extends GoogleApiClientFragment {
     private final String TAG = getClass().getSimpleName();
 
-    private GoogleApiClient mGoogleApiClient;
     private ResultCallback<WeatherResult> mWeatherListener;
     private ResultCallback<LocationResult> mLocationListener;
-    private boolean mStartRequested = false;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(Awareness.API)
-                    .build();
-        }
+    protected void addApis(GoogleApiClient.Builder builder) {
+        builder.addApi(Awareness.API);
     }
 
     @Override
@@ -46,19 +34,6 @@ public class SnapshotFragment extends Fragment implements
     }
 
     @Override
-    public void onStart() {
-        mGoogleApiClient.connect();
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        cancel();
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         mWeatherListener = null;
@@ -66,38 +41,8 @@ public class SnapshotFragment extends Fragment implements
     }
 
     @Override
-    public void onConnected(Bundle connectionHint) {
-        if (mStartRequested) {
-            getSnapshots();
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        // Don't need to do anything.
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e(TAG, "Connection to Google Play services failed.");
-    }
-
-    public void start() {
-        mStartRequested = true;
-        if (mGoogleApiClient.isConnected()) {
-            getSnapshots();
-        }
-    }
-
-    public void getSnapshots() {
-        Awareness.SnapshotApi.getLocation(mGoogleApiClient).setResultCallback(mLocationListener);
-        Awareness.SnapshotApi.getWeather(mGoogleApiClient).setResultCallback(mWeatherListener);
-    }
-
-    /**
-     * Cancel the background task.
-     */
-    private void cancel() {
-        mStartRequested = false;
+    protected void doGoogleApiWork() {
+        Awareness.SnapshotApi.getLocation(getGoogleApiClient()).setResultCallback(mLocationListener);
+        Awareness.SnapshotApi.getWeather(getGoogleApiClient()).setResultCallback(mWeatherListener);
     }
 }
