@@ -24,9 +24,6 @@
             android:name=".activities.ResultActivity"
             android:parentActivityName=".activities.QueryActivity" />
 
-        <activity
-            android:name=".activities.DetailActivity" />
-
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
             android:value="@string/GSM_API_KEY_ANDROID" />
